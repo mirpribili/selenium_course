@@ -1,4 +1,4 @@
-#How to start
+# How to start
 
 ## mint CMD
 
