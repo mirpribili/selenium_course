@@ -38,9 +38,9 @@ from selenium import webdriver
 browser = webdriver.Chrome()
 browser.get("http://suninjuly.github.io/simple_form_find_task.html")
 button = browser.find_element_by_id("submit_button")
-
-Есть второй способ для поиска элементов с помощью универсального метода find_element() и полей класса By из библиотеки selenium. Пример:
-
+```
+#### Есть второй способ для поиска элементов с помощью универсального метода find_element() и полей класса By из библиотеки selenium. Пример:
+```python
 from selenium import webdriver
 
 from selenium.webdriver.common.by import By
