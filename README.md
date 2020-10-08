@@ -56,7 +56,7 @@
 - - ctrl+c
 - 
 #### STEP 3
-- - cd $HOME
+- cd $HOME
 - git --version
 - git clone https://github.com/mirpribili/selenium_course.git
 - cd $HOME/selenium_course
@@ -68,7 +68,7 @@
 - git commit -m "test ssh Version 1.0"
 - git push origin
 - 
-- 
+#### STEP 4
 - 
 - 
 - 

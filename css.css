@@ -1,0 +1,56 @@
+/*1.4
+
+$x('.//button[text() = "Gold"]')
+
+*/
+
+
+/*#1.5*/
+
+.card-body:nth-child(1) p
+{
+    color:blue;
+}
+
+p.text
+{
+    color:blue;
+}
+
+.watermelon p.description
+{
+    color:blue;
+}
+
+.banana p
+{
+    color:blue;
+}
+
+/* Все span с атрибутом "lang" будут жирными */
+span[lang] {font-weight:bold;}
+ 
+/* Все span в Португалии будут зелеными */
+span[lang="pt"] {color:green;}
+
+/* Все span с американским английским будут синими */
+span[lang~="en-us"] {color: blue;}
+
+/* Любые span на китайском языке будут красными, как на упрощенном китайском (zh-CN) так и на традиционном (zh-TW) */
+span[lang|="zh"] {color: red;}
+
+/* Все внутренние ссылки будут иметь золотой фон */
+a[href^="#"] {background-color:gold}
+
+/* Все ссылки с url заканчивающимся на .cn будут красными */
+a[href$=".cn"] {color: red;}
+
+/* Все ссылки содержащие "example" в url будут иметь серый фон */
+a[href*="example"] {background-color: #CCCCCC;}
+
+
+[name=banana] button:nth-child(2)
+{
+    color:blue;
+}
+
