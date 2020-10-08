@@ -128,3 +128,13 @@ finally:
 
 Если хотите узнать больше про исключения, как их кидать, ловить и как с ними жить, то советуем к прохождению вот этот урок:  [Ошибки и исключения](https://stepik.org/lesson/24463/step/1?unit=6771).
 
+
+
+Здесь можно (и, кажется, нужно) использовать конструкцию **with ... as**:
+```python
+with webdriver.Chrome() as browser:
+    browser.get(link)
+    button = browser.find_element(By.ID, "submit")
+    button.click()
+```
+Оно само избавится от ресурса по выходу из блока или при падении.
