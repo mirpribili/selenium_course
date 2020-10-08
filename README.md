@@ -1,1 +1,80 @@
-# selenium_course
+#How to start
+
+## mint CMD
+
+#### STEP 1
+- conda deactivate
+- conda activate
+
+- sudo apt-get update && sudo apt-get upgrade
+- sudo apt-get install python3.7
+- python3.7 --version
+- nano ~/.bashrc
+- - add string
+- - - alias python3=python3.7
+- source ~/.bashrc
+- conda deactivate
+- python3 -m pip install pip
+- IF ERROR
+- sudo apt install python3-pip
+- sudo apt-get install -y python3.7-venv
+- cd $HOME
+- mkdir enviroments
+- cd enviroments
+- python3 -m venv selenium_env
+- source selenium_env/bin/activate
+- - deactivate
+-
+- source selenium_env/bin/activate
+- python
+- print("Hello, Selenium!")
+- exit()
+- cd $HOME/enviroments;source selenium_env/bin/activate
+- $HOME/enviroments/selenium_env/bin/python3.7 -m pip install --upgrade pip
+- pip install selenium==3.14.0
+- pip list
+- 
+#### STEP 2
+- cd $HOME/enviroments/selenium_env/chromedriver86
+- sudo mv chromedriver /usr/local/bin/chromedriver
+- sudo chown root:root /usr/local/bin/chromedriver
+- sudo chmod +x /usr/local/bin/chromedriver
+- chromedriver
+- 
+- mkdir ~/selenium_course
+-  mv  ~/Загрузки/get_method.py ~/selenium_course
+- python  ~/selenium_course/get_method.py
+- - IF --> Current browser version is 83.0.4103.106 with binary path /usr/bin/google-chrome
+- - - https://sites.google.com/a/chromium.org/chromedriver/downloads --> https://chromedriver.storage.googleapis.com/index.html?path=83.0.4103.14/
+- - - GO TO STEP 2
+- 
+- cd $HOME/enviroments/selenium_env/chromedriver83
+- sudo cp chromedriver /usr/local/bin/chromedriver
+- sudo chown root:root /usr/local/bin/chromedriver
+- sudo chmod +x /usr/local/bin/chromedriver
+- chromedriver
+- - ctrl+c
+- 
+#### STEP 3
+- - cd $HOME/selenium_course
+- git --version
+- git clone https://github.com/mirpribili/my_jupyter.git
+- git init .
+- git status
+- git add *
+- git commit -m "My Initial commit, this is Version1.0"
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
+- 
