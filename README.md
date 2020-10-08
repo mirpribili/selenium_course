@@ -56,15 +56,17 @@
 - - ctrl+c
 - 
 #### STEP 3
-- - cd $HOME/selenium_course
+- - cd $HOME
 - git --version
-- git clone https://github.com/mirpribili/my_jupyter.git
-- git init .
+- git clone https://github.com/mirpribili/selenium_course.git
+- cd $HOME/selenium_course
 - git status
-- git add *
-- git commit -m "My Initial commit, this is Version1.0"
-- 
-- 
+- git remote set-url origin git@github.com:mirpribili/selenium_course.git
+- git remote -v
+- git status
+- git add .
+- git commit -m "test ssh Version 1.0"
+- git push origin
 - 
 - 
 - 
