@@ -187,7 +187,7 @@ assert len(goods) == 2
 - **find_elements_by_link_text**;
 - **find_elements_by_partial_link_text**.
 
-Также для поиска нескольких элементов мы можем использовать универсальный метод find_elements вместе с атрибутами класса By:
+Также для поиска нескольких элементов мы можем использовать универсальный метод **find_elements** вместе с атрибутами класса **By**:
 ```python
 from selenium.webdriver.common.by import By
 
@@ -195,3 +195,36 @@ from selenium.webdriver.common.by import By
 driver.find_elements(By.CSS_SELECTOR, "button.submit")
 ```
 <span style='color:red'>!Важно.</span> Обратите внимание на важную разницу в результатах, которые возвращают методы **find_element** и **find_elements**. Если первый метод не смог найти элемент на странице, то он вызовет **ошибку NoSuchElementException**, которая прервёт выполнение вашего кода. **Второй же метод** всегда возвращает валидный результат: если ничего не было найдено, то он вернёт пустой список и ваша программа перейдет к выполнению следующего шага в коде.
+
+
+
+# Как работать с элементами типа checkbox и radiobutton?
+```python
+<input type="radio" name="language" value="python" checked>
+<input type="radio" name="language" value="selenium">
+```
+Checkboxes могут иметь как одинаковые, так и разные значения атрибута name. Поэтому и те, и другие лучше искать с помощью значения **id** или значения атрибута **value**. Если вы видите на странице чекбокс с уникальным значением **name**, то можете искать по name.
+
+Чтобы снять/поставить галочку в элементе типа **checkbox** или выбрать опцию из группы **radiobuttons**, надо указать **WebDriver** метод поиска элемента и выполнить для найденного элемента метод **click()**:
+```python
+option1 = browser.find_element_by_css_selector("[value='python']")
+option1.click()
+```
+
+Также вы можете увидеть тег **label рядом с input**. Этот тег используется, чтобы сделать кликабельным текст, который отображается рядом с флажком. Этот текст заключен внутри тега **label**. Элемент **label** связывается с элементом **input** с помощью атрибута **for**, в котором указывается значение атрибута **id для элемента input**:
+```python
+<div>
+  <input type="radio" id="python" name="language" checked>
+  <label for="python">Python</label>
+</div>
+<div>
+  <input type="radio" id="java" name="language">
+  <label for="java">Java</label>
+</div>
+```
+В этом случае можно также отметить нужный checkbox с помощью **WebDriver**, выполнив метод **click()** на элементе **label**.
+```python
+option1 = browser.find_element_by_css_selector("[for='python']")
+option1.click()
+```
+
