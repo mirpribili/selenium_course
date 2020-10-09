@@ -8,8 +8,15 @@ https://coursehunter.net/course/rest-apis-s-flask-i-python
 """
 
 import os
+from os.path import abspath
 
-directory = '/home/kde/selenium_course/'
+name_file = os.path.basename(__file__)
+len_name = len(name_file)
+
+directory = abspath(__file__)
+directory = directory[0:-len_name]
+
+print("*"+directory)
 
 files = os.listdir(directory)
 print("files:", files)
@@ -17,12 +24,12 @@ print("files:", files)
 py = filter(lambda x: x.endswith('.py'), files)
 print(" -"*25)
 
-name_file = os.path.basename(__file__)
+
 name_file_result = name_file[0:-3]+'_RESULT.py'
 all_texts = ""
 
 for p in py:
-	if p != name_file and p != name_file_result:
+	if p != name_file_result:
 		print(p)
 
 		f = open(p)
