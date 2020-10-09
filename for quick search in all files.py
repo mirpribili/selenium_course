@@ -18,7 +18,7 @@ py = filter(lambda x: x.endswith('.py'), files)
 print(" -"*25)
 
 name_file = os.path.basename(__file__)
-name_file_result = name_file[0:-4]+'_RESULT.py'
+name_file_result = name_file[0:-3]+'_RESULT.py'
 all_texts = ""
 
 for p in py:
