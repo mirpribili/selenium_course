@@ -42,6 +42,14 @@ finally:
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson2_item1_step7.py
+
+# Шпаргалка по xpath и css селекторам
+# https://devhints.io/xpath\
+
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson1_item6_step8.py
 from selenium import webdriver
 import time
@@ -154,6 +162,47 @@ f.write(all_texts + '\n')
 f.close()
 
 print("OK")
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson2_item1_step6.py
+from selenium import webdriver
+import time
+
+link = "http://suninjuly.github.io/math.html"
+
+try:
+    browser = webdriver.Chrome()
+    browser.get(link)
+
+#проверяем значение атрибута checked у people_radio
+    people_radio = browser.find_element_by_id("peopleRule")
+    people_checked = people_radio.get_attribute("checked")
+    print("value of people radio: ", people_checked)
+    assert people_checked is not None, "People radio is not selected by default"
+
+#проверяем значение атрибута checked у robots_radio
+    robots_radio = browser.find_element_by_id("robotsRule")
+    robots_checked = robots_radio.get_attribute("checked")
+    print("value of robots_radio: ", robots_checked)
+    assert robots_checked is None
+
+#проверяем значение атрибута disabled у кнопки Submit
+    button = browser.find_element_by_css_selector('.btn')
+    button_disabled = button.get_attribute("disabled")
+    print("value of button Submit: ", button_disabled)
+    assert button_disabled is None
+
+#проверяем значение атрибута disabled у кнопки Submit после таймаута
+    time.sleep(10)
+    button_disabled = button.get_attribute("disabled")
+    print("value of button Submit after 10sec: ", button_disabled)
+    assert button_disabled is not None
+
+finally:
+    # закрываем браузер после всех манипуляций
+    browser.quit()
+
+# не забываем оставить пустую строку в конце файла
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ 1_4.py
@@ -367,6 +416,47 @@ finally:
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ os_mint.py
+
+#cd $HOME/selenium_course; python os_mint.py
+# https://andreyex.ru/yazyk-programmirovaniya-python/vypolnenie-komand-obolochki-s-python/
+
+import os
+import time 
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
+
+myCmd = 'ls -la' 
+os.system (myCmd)
+
+#myCmd = "ping -c 1 8.8.8.8 &> /dev/null && echo success || echo fail & sudo service network-manager restart"
+myCmd = "ping -c 1 8.8.8.8 &> /dev/null && echo success || sudo service network-manager restart"
+
+#myCmd = "ping -c 1 8.8.8.8"
+i = 0
+while True:
+	time.sleep(2)
+	i += 1
+	#print(i)
+	print(f"{bcolors.WARNING}==={i}==={bcolors.ENDC}")
+	os.system(myCmd)
+
+	#myCmd = os.popen(myCmd).read()
+	#print(myCmd)
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson1_item6_step4.py
 from selenium import webdriver
 import time 
@@ -417,13 +507,14 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
 
-link = "http://suninjuly.github.io/find_xpath_form"
+link = "http://suninjuly.github.io/math.html"
 
-value1 ="input"
-value2 ="last_name"
-value3 ="city"
-value4 ="country"
 
+
+import math
+
+def calc(x):
+    return str(math.log(abs(12*math.sin(int(x)))))
 
 
 try:
@@ -436,14 +527,25 @@ try:
     time.sleep(1)
 
 
-    input1 = browser.find_element_by_tag_name(value1)
-    input1.send_keys("Ivan")
-    input2 = browser.find_element_by_name(value2)
-    input2.send_keys("Petrov")
-    input3 = browser.find_element_by_class_name(value3)
-    input3.send_keys("Smolensk")
-    input4 = browser.find_element_by_id(value4)
-    input4.send_keys("Russia")
+    #$x('//span[contains(text(),"What")]/text()')
+
+
+    
+    input3 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    
+    x = input3.text
+    y = calc(int(x))
+
+
+    input1 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
+    input1.send_keys(y)
+
+    option1 = browser.find_element_by_css_selector("[for='robotCheckbox']")
+    option1.click()
+
+    option2 = browser.find_element_by_css_selector("[for='robotsRule']")
+    option2.click()
+
 
 
  
@@ -463,10 +565,10 @@ try:
 
 finally:
     # успеваем скопировать код за 30 секунд
-    time.sleep(30)
+    time.sleep(10)
     # закрываем браузер после всех манипуляций
 
-    browser.close()
+    #browser.close()
     time.sleep(2)
     browser.quit()
 

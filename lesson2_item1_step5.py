@@ -2,13 +2,14 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
 
-link = "http://suninjuly.github.io/find_xpath_form"
+link = "http://suninjuly.github.io/math.html"
 
-value1 ="input"
-value2 ="last_name"
-value3 ="city"
-value4 ="country"
 
+
+import math
+
+def calc(x):
+    return str(math.log(abs(12*math.sin(int(x)))))
 
 
 try:
@@ -21,14 +22,25 @@ try:
     time.sleep(1)
 
 
-    input1 = browser.find_element_by_tag_name(value1)
-    input1.send_keys("Ivan")
-    input2 = browser.find_element_by_name(value2)
-    input2.send_keys("Petrov")
-    input3 = browser.find_element_by_class_name(value3)
-    input3.send_keys("Smolensk")
-    input4 = browser.find_element_by_id(value4)
-    input4.send_keys("Russia")
+    #$x('//span[contains(text(),"What")]/text()')
+
+
+    
+    input3 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    
+    x = input3.text
+    y = calc(int(x))
+
+
+    input1 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
+    input1.send_keys(y)
+
+    option1 = browser.find_element_by_css_selector("[for='robotCheckbox']")
+    option1.click()
+
+    option2 = browser.find_element_by_css_selector("[for='robotsRule']")
+    option2.click()
+
 
 
  
@@ -48,10 +60,10 @@ try:
 
 finally:
     # успеваем скопировать код за 30 секунд
-    time.sleep(30)
+    time.sleep(10)
     # закрываем браузер после всех манипуляций
 
-    browser.close()
+    #browser.close()
     time.sleep(2)
     browser.quit()
 

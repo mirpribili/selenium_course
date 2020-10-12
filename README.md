@@ -74,7 +74,9 @@
 - conda deactivate; source $HOME/enviroments/selenium_env/bin/activate
 - python  ~/selenium_course/lesson6_step4.py
 - 
-- 
+#### STEP 5
+- cd $HOME/selenium_course;python  ~/selenium_course/lesson6_step4.py
+- cd $HOME/selenium_course;git add .;git commit -m "Add help Selentium.md";git push origin
 - 
 - 
 - 
