@@ -81,3 +81,13 @@
 - 
 - 
 - 
+##### OFF TOP
+- NO
+- - sudo apt install dsniff
+- - sudo tcpkill -i enp0s29f7u2 port 80
+- - sudo tcpkill -i enp0s29f7u2 host www.ya.ru
+- OK [source](http://itisgood.ru/2018/10/02/kak-perezagruzit-set-v-ubuntu/)
+- - sudo service network-manager restart
+- - - ping -c 1 homeserver >/dev/null && echo 'Successfully pinged device!'
+- - - ping 8.8.8.8 -i 2 >/dev/null && echo 'Successfully pinged device!'
+- - - ping -c 1 127.0.0.1 &> /dev/null && echo success || echo fail
