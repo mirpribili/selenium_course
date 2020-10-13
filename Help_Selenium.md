@@ -786,7 +786,8 @@ crontab -e
 
 <img alt="" src="/[img]/methods1.png" width="811" height="406">
 
-# [7.39. Expected conditions Support](https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions)
+# Справочники
+[7.39. Expected conditions Support](https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions)
 
 
 
@@ -817,7 +818,7 @@ crontab -e
 </ul></span>
 
 
-# А чем отличаются text_to_be_present_in_element  от text_to_be_present_in_element_value ?
+## А чем отличаются text_to_be_present_in_element  от text_to_be_present_in_element_value ?
 
 - **text_to_be_present_in_element** ожидает появление элемента, ищет его по текстовому значению. мы уже использовали этот метод в задании, когда бронировали дом и ждали, пока цена упадет до 100$.
 - **text_to_be_present_in_element_value** ищет по тексту из атрибута value. 
