@@ -1,4 +1,82 @@
 
+############ lesson2_item4_step8.py
+
+'''
+    
+    Открыть страницу http://suninjuly.github.io/explicit_wait2.html
+    Дождаться, когда цена дома уменьшится до $100 (ожидание нужно установить не меньше 12 секунд)
+    Нажать на кнопку "Book"
+    Решить уже известную нам математическую задачу (используйте ранее написанный код) и отправить решение
+'''
+
+from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
+import os
+import methods
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+link = "http://suninjuly.github.io/explicit_wait2.html"
+
+
+# <input type="text" name="firstname" class="form-control" 
+# placeholder="Enter first name" required="" maxlength="32">
+
+# $("[name*='email']")
+# $x('.//button[text() = "Submit"]')
+# //input[@id='firstName']
+# //input[@type='text'] 
+# 1)Driver.FindElement(By.XPath("//input[@id='firstName']"));
+# 2)Driver.FindElement(By.Id("firstName"));
+# 3)Driver.FindElement(By.CssSelector("#firstName"));
+# //*[text()[contains(.,'firstName')]]
+## $x(".//input[@name='email']")
+
+
+try:
+    browser = webdriver.Chrome()
+    browser.get(link)
+
+
+    WebDriverWait(browser, 12).until(
+        #EC.text_to_be_present_in_element((By.ID, "тут id"), "тут цена"))
+        EC.text_to_be_present_in_element((By.ID, "price"), "$100"))
+ 
+
+    button = browser.find_element(By.XPATH, './/button[text() = "Book"]')
+    button.click()
+
+    time.sleep(1)
+
+
+    input3 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    x = input3.text
+    y = methods.calc(int(x))
+
+
+    input1 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
+    input1.send_keys(y)
+
+
+    button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
+    button.click()
+
+
+
+finally:
+    # успеваем скопировать код за 30 секунд
+    time.sleep(10)
+    # закрываем браузер после всех манипуляций
+
+    #browser.close()
+    time.sleep(2)
+    browser.quit()
+
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson1_item6_step11.py
 
 from selenium import webdriver
@@ -243,6 +321,30 @@ finally:
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item2_step13.py
+
+'''
+
+    Возьмите тесты из шага — https://stepik.org/lesson/138920/step/11?unit=196194
+    Создайте новый файл
+    Создайте в нем класс с тестами, который должен наследоваться от unittest.TestCase по аналогии с предыдущим шагом
+    Перепишите в стиле unittest тест для страницы http://suninjuly.github.io/registration1.html
+    Перепишите в стиле unittest второй тест для страницы http://suninjuly.github.io/registration2.html
+    Оформите финальные проверки в тестах в стиле unittest, например, используя проверочный метод assertEqual
+    Запустите получившиеся тесты из файла 
+    Просмотрите отчёт о запуске и найдите последнюю строчку 
+    Отправьте эту строчку в качестве ответа на это задание 
+
+'''
+
+def test_substring(full_string, substring):
+    # ваша реализация, напишите assert и сообщение об ошибке
+    assert substring in full_string, f"expected '{substring}' to be substring of '{full_string}'"
+    
+
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ for quick search in all files.py
 """
 https://coursehunter.net/course/python-razrabotchik
@@ -304,6 +406,46 @@ def calc(x):
 
 if __name__ == "__main__":
     pass
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item2_step8.py
+
+'''
+	Дана функция test_input_text,  которая принимает два значения: expected_result — ожидаемый результат, и actual_result — фактический результат. Обратите внимание, input использовать не нужно!
+
+	Функция должна проверить совпадение значений с помощью оператора assert и, в случае несовпадения, предоставить исчерпывающее сообщение об ошибке. 
+
+	Важно! Формат ошибки должен точно совпадать с приведенным в примере, чтобы его засчитала проверяющая система! 
+
+	Маленький совет: попробуйте воспользоваться кнопкой "Запустить код" и протестируйте ваш код на разных введенных значениях, проверьте вывод вашей функции на разных парах. Обрабатывать ситуацию с пустым или невалидным вводом не нужно. 
+
+	Sample Input 1:
+
+	8 11
+
+	Sample Output 1:
+
+	expected 8, got 11
+
+	Sample Input 2:
+
+	11 11
+
+	Sample Output 2:
+
+	Sample Input 3:
+
+	11 15
+
+	Sample Output 3:
+
+expected 11, got 15
+
+'''
+def test_input_text(expected_result, actual_result):
+    # ваша реализация, напишите assert и сообщение об ошибке
+    assert expected_result == actual_result,\
+    f"expected {expected_result}, got {actual_result}" 
+
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson2_item3_step6.py
 
@@ -367,84 +509,6 @@ try:
 
     button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
     button.click()
-
-
-finally:
-    # успеваем скопировать код за 30 секунд
-    time.sleep(10)
-    # закрываем браузер после всех манипуляций
-
-    #browser.close()
-    time.sleep(2)
-    browser.quit()
-
-
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-############ lesson2_item3_step8.py
-
-'''
-    
-    Открыть страницу http://suninjuly.github.io/explicit_wait2.html
-    Дождаться, когда цена дома уменьшится до $100 (ожидание нужно установить не меньше 12 секунд)
-    Нажать на кнопку "Book"
-    Решить уже известную нам математическую задачу (используйте ранее написанный код) и отправить решение
-'''
-
-from selenium import webdriver
-import time
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-import os
-import methods
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-link = "http://suninjuly.github.io/explicit_wait2.html"
-
-
-# <input type="text" name="firstname" class="form-control" 
-# placeholder="Enter first name" required="" maxlength="32">
-
-# $("[name*='email']")
-# $x('.//button[text() = "Submit"]')
-# //input[@id='firstName']
-# //input[@type='text'] 
-# 1)Driver.FindElement(By.XPath("//input[@id='firstName']"));
-# 2)Driver.FindElement(By.Id("firstName"));
-# 3)Driver.FindElement(By.CssSelector("#firstName"));
-# //*[text()[contains(.,'firstName')]]
-## $x(".//input[@name='email']")
-
-
-try:
-    browser = webdriver.Chrome()
-    browser.get(link)
-
-
-    WebDriverWait(browser, 12).until(
-        #EC.text_to_be_present_in_element((By.ID, "тут id"), "тут цена"))
-        EC.text_to_be_present_in_element((By.ID, "price"), "$100"))
- 
-
-    button = browser.find_element(By.XPATH, './/button[text() = "Book"]')
-    button.click()
-
-    time.sleep(1)
-
-
-    input3 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
-    x = input3.text
-    y = methods.calc(int(x))
-
-
-    input1 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
-    input1.send_keys(y)
-
-
-    button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
-    button.click()
-
 
 
 finally:
@@ -534,6 +598,49 @@ finally:
     #browser.close()
     time.sleep(2)
     browser.quit()
+
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item2_step9.py
+
+'''
+Вам дан шаблон для функции test_substring, которая принимает два значения: full_string и substring. 
+
+Функция должна проверить вхождение строки substring в строку full_string с помощью оператора assert и, в случае несовпадения, предоставить исчерпывающее сообщение об ошибке. 
+
+Важно! Формат ошибки должен точно совпадать с приведенным в примере, чтобы его засчитала проверяющая система! 
+
+Маленький совет: попробуйте воспользоваться кнопкой "Запустить код" и протестируйте ваш код на разных введенных значениях, проверьте вывод вашей функции на разных парах. Обрабатывать ситуацию с пустым или невалидным вводом не нужно. 
+
+Sample Input 1:
+
+fulltext some_value
+
+Sample Output 1:
+
+expected 'some_value' to be substring of 'fulltext'
+
+Sample Input 2:
+
+1 1
+
+Sample Output 2:
+
+Sample Input 3:
+
+some_text some
+
+Sample Output 3:
+
+
+
+'''
+
+def test_substring(full_string, substring):
+    # ваша реализация, напишите assert и сообщение об ошибке
+    assert substring in full_string, f"expected '{substring}' to be substring of '{full_string}'"
+    
 
 
 
