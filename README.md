@@ -77,6 +77,9 @@
 #### STEP 5
 - cd $HOME/selenium_course;python  ~/selenium_course/lesson2_item2_step8.py
 - cd $HOME/selenium_course;git add .;git commit -m "Add help Selentium.md";git push origin
+- 
+- 
+#### STEP 6
 - cd $HOME/selenium_course;python  ~/selenium_course/os_mint.py
 - 
 - 

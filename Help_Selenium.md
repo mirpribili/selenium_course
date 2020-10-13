@@ -485,6 +485,7 @@ file_path = os.path.join(current_dir, 'file.txt')
 ```python
 alert('Hello!');
 ```
+<img alt="" src="https://ucarecdn.com/1f26a205-5040-46bb-a416-c8d02655fc3a/" width="451" height="137">
 Теперь рассмотрим ситуацию, когда в сценарии теста возникает необходимость не только получить содержимое **alert**, но и нажать кнопку OK, чтобы закрыть **alert**. 
 **Alert** является модальным окном: это означает, что пользователь не может взаимодействовать дальше с интерфейсом, пока не закроет **alert**. Для этого нужно сначала переключиться на окно с **alert**, а затем принять его с помощью команды **accept()**:
 ```python
@@ -501,6 +502,7 @@ alert_text = alert.text
 confirm = browser.switch_to.alert
 confirm.accept()
 ```
+<img alt="" src="https://ucarecdn.com/52f90c5a-b04e-4387-8e3e-eae80d8d3f2c/" width="450" height="137">
 Для **confirm-окон** можно использовать следующий **метод для отказа**:
 ```python
 confirm.dismiss()
