@@ -547,7 +547,278 @@ alert_text.split(': ')[-1]
 Только зачем, если из теста вставлять число в ответ, то просто используй .send_keys(имя_переменной_с_результатом) и **pyperclip** с буфером обмена не нужен. [Вот](https://github.com/VitaliyYa/sendToStepik) как я делал.
 P.S ADD [sendToStepik auth](https://github.com/VitaliyYa/sendToStepik/blob/master/auth.py)
 
-# Сопоставьте типы модальных окон в браузере с методами WebDriver для взаимодействия с ним:
+### Сопоставьте типы модальных окон в браузере с методами WebDriver для взаимодействия с ним:
 
 <img alt="" src="/[img]/alert.png" width="605" height="154">
+
+**pyperclip** И она очень крута! После нее можно поставить **alert.accept()** и поставить **time.sleep(0)** или вообще не прописывать, и тогда все пройдет максимально быстро.
+
+
+
+# Переход на новую вкладку браузера
+
+При работе с веб-приложениями приходится переходить по ссылкам, которые открываются в новой вкладке браузера. **WebDriver может работать только с одной вкладкой браузера**. При открытии новой вкладки WebDriver продолжит работать со старой вкладкой. Для переключения на новую вкладку надо явно указать, на какую вкладку мы хотим перейти. Это делается с помощью команды **switch_to.window**:
+```python
+browser.switch_to.window(window_name)
+```
+Чтобы **узнать имя новой вкладки**, нужно использовать метод **window_handles**, который возвращает массив имён всех вкладок. Зная, что в браузере теперь открыто две вкладки, выбираем вторую вкладку:
+```python
+new_window = browser.window_handles[1]
+```
+Также мы можем запомнить имя текущей вкладки, чтобы иметь возможность потом к ней вернуться:
+```python
+first_window = browser.window_handles[0]
+```
+После переключения на новую вкладку поиск и взаимодействие с элементами будут происходить уже на новой странице.
+
+
+
+
+# Как работают методы get и find_element
+
+*Разберем еще один простой тест на WebDriver, проверяющий работу кнопки*.
+
+Тестовый сценарий выглядит так:
+
+- Открыть страницу http://suninjuly.github.io/wait1.html
+- Нажать на кнопку "Verify"
+- Проверить, что появилась надпись "Verification was successful!"
+
+Для **открытия страницы мы используем метод get**, затем находим нужную кнопку с помощью одного из методов **find_element_by_** и нажимаем на нее с помощью метода **click**. Далее находим новый элемент с текстом и проверяем соответствие текста на странице ожидаемому тексту.
+
+Вот как выглядит код автотеста:
+```python
+from selenium import webdriver
+
+browser = webdriver.Chrome()
+browser.get("http://suninjuly.github.io/wait1.html")
+
+button = browser.find_element_by_id("verify")
+button.click()
+message = browser.find_element_by_id("verify_message")
+
+assert "successful" in message.text
+```
+Попробуйте сначала выполнить тест вручную, а затем запустить автотест. 
+- В первом случае, вы завершите тест успешно
+- Bо втором случае автотест упадет с сообщением **NoSuchElementException для элемента c id="verify"**. 
+
+### Почему так происходит?
+
+Команды в Python выполняются синхронно, то есть, строго последовательно. **Пока не завершится команда get**, не начнется поиск кнопки. Пока кнопка не найдена, не будет сделан клик по кнопке и так далее.
+
+Но тест будет работать **абсолютно стабильно**, только **если** в данной веб-странице **не используется JavaScript** (что **маловероятно** для современного веба). 
+Метод **get** дожидается информации от браузера о том, что страница загружена, и только после этого наш тест переходит к поиску кнопки. Если страница интерактивная, то браузер будет считать, что страница загружена, при этом продолжат выполняться загруженные браузером скрипты. 
+**Скрипт может управлять** появлением кнопки на странице и **показывать** ее, например, **с задержкой**, чтобы кнопка красиво и медленно возникала на странице. 
+В этом случае наш **тест упадет** с уже известной нам ошибкой **NoSuchElementException**, так как в момент выполнения команды **button = browser.find_element_by_id("verify")** элемент с **id="verify"** еще не отображается на странице. На данной странице пауза перед появлением кнопки установлена на **1 секунду, метод find_element_by_id() сделает только одну попытку найти элемент и в случае неудачи уронит наш тест**.
+
+
+
+
+# Давайте быстрее это починим: time.sleep()
+
+Теперь, когда мы уже знаем, что кнопка появляется с задержкой, мы можем добавить паузу до начала поиска элемента. Мы уже использовали библиотеку time ранее. Давайте применим ее и сейчас:
+```python
+from selenium import webdriver
+import time
+
+browser = webdriver.Chrome()
+browser.get("http://suninjuly.github.io/wait1.html")
+
+time.sleep(1)
+button = browser.find_element_by_id("verify")
+button.click()
+message = browser.find_element_by_id("verify_message")
+
+assert "successful" in message.text
+```
+Теперь тест проходит. Но что если элемент с сообщением тоже будет появляться с задержкой? Добавить еще один **time.sleep()** перед поиском сообщения? 
+**А если изменится время задержки при появлении кнопки?** Увеличим длительность паузы? А еще на разных машинах с разной скоростью интернета кнопка может появляться через разные промежутки времени. Можно перед каждым действием добавить задержку, но тогда значительную часть времени прогона тестов будут занимать бесполезные ожидания, **при этом с увеличением количества тестов эта проблема будет только расти.**
+
+
+
+# Есть способы получше: Selenium Waits (Implicit Waits)
+
+Надеемся, вы поняли, что решение с **time.sleep()** плохое: оно не масштабируемое и трудно поддерживаемое.
+
+Идеальное решение могло бы быть таким: нам всё равно надо избежать ложного падения тестов из-за асинхронной работы скриптов или задержек от сервера, поэтому мы будем ждать появление элемента на странице в течение заданного количества времени (например, 5 секунд). Проверять наличие элемента будем каждые 500 мс. Как только элемент будет найден, мы сразу перейдем к следующему шагу в тесте. Таким образом, мы сможем получить нужный элемент в идеальном случае сразу, в худшем случае за 5 секунд.
+
+В Selenium WebDriver есть специальный способ организации такого ожидания, который позволяет задать ожидание при инициализации драйвера, чтобы применить его ко всем тестам. Ожидание называется **неявным (Implicit wait)**, так как его не надо явно указывать каждый раз, когда мы выполняем поиск элементов, оно автоматически будет применяться при вызове каждой последующей команды.
+
+Улучшим наш тест с помощью неявных ожиданий. Для этого нам нужно будет убрать **time.sleep()** и добавить одну строчку с методом **implicitly wait**:
+```python
+from selenium import webdriver
+
+browser = webdriver.Chrome()
+# говорим WebDriver искать каждый элемент в течение 5 секунд
+browser.implicitly_wait(5)
+
+browser.get("http://suninjuly.github.io/wait1.html")
+
+button = browser.find_element_by_id("verify")
+button.click()
+message = browser.find_element_by_id("verify_message")
+
+assert "successful" in message.text
+```
+Теперь мы можем быть уверены, что при небольших задержках в работе сайта наши тесты продолжат работать стабильно. На каждый вызов команды **find_element** WebDriver будет ждать 5 секунд до появления элемента на странице прежде, чем выбросить исключение **NoSuchElementException**.
+
+
+# Про Exceptions
+
+Теперь мы знаем, как настроить ожидание поиска элемента. Во время поиска WebDriver каждые 0.5 секунды проверяет, появился ли нужный элемент в DOM-модели браузера (**Document Object Model** — «объектная модель документа», интерфейс для доступа к HTML-содержимому сайта). Если произойдет ошибка, то WebDriver выбросит одно из следующих исключений (**exceptions**):
+
+- Если элемент не был найден за отведенное время, то мы получим NoSuchElementException.
+- Если элемент был найден в момент поиска, но при последующем обращении к элементу DOM изменился, то получим **StaleElementReferenceException**. Например, мы нашли элемент Кнопка и через какое-то время решили выполнить с ним уже известный нам метод **click**. Если кнопка за это время была скрыта скриптом, то метод применять уже бесполезно — элемент "устарел" (stale) и мы увидим исключение.
+- Если элемент был найден в момент поиска, но сам элемент невидим (например, имеет нулевые размеры), и реальный пользователь не смог бы с ним взаимодействовать, то получим **ElementNotVisibleException**.
+
+Знание причин появления исключений помогает отлаживать тесты и понимать, где находится баг в случае его возникновения.
+
+
+# Explicit Waits (WebDriverWait и expected_conditions)
+
+В предыдущем шаге мы решили проблему с ожиданием элементов на странице. Однако методы **find_element** проверяют только то, что элемент появился на странице. В то же время элемент может иметь дополнительные свойства, которые могут быть важны для наших тестов. Рассмотрим пример с кнопкой, которая отправляет данные:
+
+- Кнопка может быть неактивной, то есть её нельзя кликнуть;
+- Кнопка может содержать текст, который меняется в зависимости от действий пользователя. Например, текст "Отправить" после нажатия кнопки поменяется на "Отправлено";
+- Кнопка может быть перекрыта каким-то другим элементом или быть невидимой.
+
+**Если мы хотим в тесте кликнуть на кнопку, а она в этот момент неактивна, то WebDriver все равно проэмулирует действие нажатия на кнопку, но данные не будут отправлены.**
+
+*Давайте попробуем запустить следующий тест:*
+```python
+from selenium import webdriver
+
+browser = webdriver.Chrome()
+# говорим WebDriver ждать все элементы в течение 5 секунд
+browser.implicitly_wait(5)
+
+browser.get("http://suninjuly.github.io/wait2.html")
+
+button = browser.find_element_by_id("verify")
+button.click()
+message = browser.find_element_by_id("verify_message")
+
+assert "successful" in message.text
+```
+Мы видим, что WebDriver смог найти кнопку с **id="verify"** и кликнуть по ней, **но тест упал** на поиске элемента **"verify_message"** с итоговым сообщением:
+```python
+no such element: Unable to locate element: {"method":"id","selector":"verify_message"}
+```
+Это произошло из-за того, что WebDriver быстро нашел кнопку и кликнул по ней, хотя кнопка была еще неактивной. На странице мы специально задали программно **паузу в 1 секунду** после загрузки сайта перед активированием кнопки, **но неактивная кнопка в момент загрузки — обычное дело для реального сайта**.
+
+**Чтобы тест был надежным**, нам нужно не только найти кнопку на странице, но и дождаться, когда кнопка станет кликабельной. 
+**Для реализации** подобных ожиданий в Selenium WebDriver **существует понятие явных ожиданий (Explicit Waits)**, которые позволяют задать специальное ожидание для конкретного элемента. Задание явных ожиданий реализуется с помощью инструментов WebDriverWait и expected_conditions. *Улучшим наш тест:*
+```python
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+
+browser = webdriver.Chrome()
+
+browser.get("http://suninjuly.github.io/wait2.html")
+
+# говорим Selenium проверять в течение 5 секунд, пока кнопка не станет кликабельной
+button = WebDriverWait(browser, 5).until(
+        EC.element_to_be_clickable((By.ID, "verify"))
+    )
+button.click()
+message = browser.find_element_by_id("verify_message")
+
+assert "successful" in message.text
+```
+Как вы видите, **в этом случае нужно использовать поиск элементов с помощью класса By**, который мы рассмотрели ранее. **element_to_be_clickable вернет элемент, когда он станет кликабельным, или вернет False** в ином случае.
+
+Обратите внимание, что в объекте WebDriverWait используется функция **until**, в которую передается правило ожидания, элемент, а также значение, по которому мы будем искать элемент. **В модуле expected_conditions есть много** других правил, которые позволяют реализовать необходимые ожидания:
+
+- title_is
+- title_contains
+- presence_of_element_located
+- visibility_of_element_located
+- visibility_of
+- presence_of_all_elements_located
+- text_to_be_present_in_element
+- text_to_be_present_in_element_value
+- frame_to_be_available_and_switch_to_it
+- invisibility_of_element_located
+- element_to_be_clickable
+- staleness_of
+- element_to_be_selected
+- element_located_to_be_selected
+- element_selection_state_to_be
+- element_located_selection_state_to_be
+- alert_is_present
+
+*Описание каждого правила можно найти на* [сайте](https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions).
+
+Если мы захотим **проверять, что кнопка становится неактивной после отправки данных, то** можно задать негативное правило с помощью метода **until_not**
+```python
+# говорим Selenium проверять в течение 5 секунд пока кнопка станет неактивной
+button = WebDriverWait(browser, 5).until_not(
+        EC.element_to_be_clickable((By.ID, "verify"))
+    )
+```
+
+**В linux есть такая штука как cron (крон)** - это планировщик заданий, который работает на Unix\Linux машине. 
+Он позволяет автоматически выполнять определенные действия на пк (запуск программ, скриптов и т.д.), с заданным временем или периодичностью.
+
+При помощи него вы можете выставить любой скрипт и задать ему частоту выполнения, например 1 раз в минуту, чтобы скрипт каждую минуту автоматически запускался и проверял вашу инфу.
+
+Для этого нужно:
+```python
+#  1. Сделать скрипт исполняемым - 
+
+chmod u+x /path/to/script.py
+
+#  2. Запустить cron
+
+crontab -e 
+
+#  3. Впишите эту строку
+
+*/1 * * * * /path/to/script.py 
+```
+# методы Selenium Webdriver
+
+<img alt="" src="/[img]/methods.png" width="817" height="386">
+
+
+<img alt="" src="/[img]/methods1.png" width="811" height="406">
+
+# [7.39. Expected conditions Support](https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions)
+
+
+
+<span><p>ссылки на ресурсы, где вы сможете найти дополнительную информацию по использованию Selenium и о&nbsp;тонкостях при&nbsp;работе с ним:</p>
+
+<p><strong>Общее</strong></p>
+
+<ul>
+  <li><a href="https://selenium-python.com/" rel="nofollow noopener noreferrer" target="_blank">https://selenium-python.com/</a></li>
+  <li><a href="http://selenium-python.readthedocs.io/" rel="nofollow noopener noreferrer" target="_blank" title="Link: http://selenium-python.readthedocs.io">http://selenium-python.readthedocs.io</a></li>
+  <li><a href="http://chromedriver.chromium.org/getting-started" rel="nofollow noopener noreferrer" target="_blank" title="Link: http://chromedriver.chromium.org/getting-started">http://chromedriver.chromium.org/getting-started</a>﻿</li>
+  <li><a href="https://www.guru99.com/selenium-tutorial.html" rel="nofollow noopener noreferrer" title="Link: https://www.guru99.com/selenium-tutorial.html" target="_blank">﻿https://www.guru99.com/selenium-tutorial.html</a>&nbsp;— ﻿Туториал на английском, ориентирован на Java.﻿</li>
+  <li><a href="https://www.guru99.com/live-selenium-project.html" rel="nofollow noopener noreferrer" title="Link: https://www.guru99.com/live-selenium-project.html" target="_blank">https://www.guru99.com/live-selenium-project.html</a>&nbsp;— ﻿Можно попробовать писать автотесты для демо-сайта ﻿банка. Тоже Java.</li>
+  <li><a href="http://barancev.github.io/good-locators/" rel="noopener noreferrer nofollow" target="_blank">http://barancev.github.io/good-locators/</a>&nbsp;— что такое хорошие селекторы</li>
+  <li><a href="http://barancev.github.io/what-is-path-env-var/" rel="noopener noreferrer nofollow" target="_blank">http://barancev.github.io/what-is-path-env-var/</a>&nbsp;— что за PATH переменная?&nbsp;</li>
+</ul>
+
+<p><strong>Ожидания в Selenium WebDriver</strong></p>
+
+<ul>
+  <li><a href="https://docs.seleniumhq.org/docs/04_webdriver_advanced.jsp" rel="nofollow noopener noreferrer" style="font-size: inherit; font-weight: inherit;" title="Link: https://docs.seleniumhq.org/docs/04_webdriver_advanced.jsp" target="_blank">https://docs.seleniumhq.org/docs/04_webdriver_advanced.jsp</a></li>
+  <li><a href="https://selenium-python.readthedocs.io/waits.html" rel="nofollow noopener noreferrer" title="Link: https://selenium-python.readthedocs.io/waits.html" target="_blank">https://selenium-python.readthedocs.io/waits.html</a>﻿</li>
+  <li><a href="https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions" rel="nofollow noopener noreferrer" target="_blank">https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_condition...</a>﻿</li>
+  <li><a href="https://stackoverflow.com/questions/15122864/selenium-wait-until-document-is-ready" rel="noopener noreferrer nofollow" target="_blank">https://stackoverflow.com/questions/15122864/selenium-wait-until-document-is-ready</a></li>
+  <li><a href="https://blog.codeship.com/get-selenium-to-wait-for-page-load/" rel="noopener noreferrer nofollow" target="_blank">https://blog.codeship.com/get-selenium-to-wait-for-page-load/</a></li>
+  <li><a href="http://barancev.github.io/slow-loading-pages/" rel="noopener noreferrer nofollow" target="_blank">http://barancev.github.io/slow-loading-pages/</a></li>
+  <li><a href="http://barancev.github.io/page-loading-complete/" rel="noopener noreferrer nofollow" target="_blank">http://barancev.github.io/page-loading-complete/</a></li>
+</ul></span>
+
+
+# А чем отличаются text_to_be_present_in_element  от text_to_be_present_in_element_value ?
+
+- **text_to_be_present_in_element** ожидает появление элемента, ищет его по текстовому значению. мы уже использовали этот метод в задании, когда бронировали дом и ждали, пока цена упадет до 100$.
+- **text_to_be_present_in_element_value** ищет по тексту из атрибута value. 
 
