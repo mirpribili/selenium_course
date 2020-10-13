@@ -300,14 +300,12 @@ print("OK")
 '''
 
     
-    Открыть страницу http://SunInJuly.github.io/execute_script.html.
-    Считать значение для переменной x.
-    Посчитать математическую функцию от x.
-    Проскроллить страницу вниз.
-    Ввести ответ в текстовое поле.
-    Выбрать checkbox "I'm the robot".
-    Переключить radiobutton "Robots rule!".
-    Нажать на кнопку "Submit".
+    
+    Открыть страницу http://suninjuly.github.io/file_input.html
+    Заполнить текстовые поля: имя, фамилия, email
+    Загрузить файл. Файл должен иметь расширение .txt и может быть пустым
+    Нажать кнопку "Submit"
+
 
 
 '''
@@ -319,10 +317,23 @@ import math
 from selenium.webdriver.support.ui import Select
 
 
-link = "http://suninjuly.github.io/execute_script.html"
+link = "http://suninjuly.github.io/file_input.html"
 
 def calc(x):
     return str(math.log(abs(12*math.sin(int(x)))))
+
+# <input type="text" name="firstname" class="form-control" 
+# placeholder="Enter first name" required="" maxlength="32">
+
+# $("[name*='email']")
+# $x('.//button[text() = "Submit"]')
+# //input[@id='firstName']
+# //input[@type='text'] 
+# 1)Driver.FindElement(By.XPath("//input[@id='firstName']"));
+# 2)Driver.FindElement(By.Id("firstName"));
+# 3)Driver.FindElement(By.CssSelector("#firstName"));
+# //*[text()[contains(.,'firstName')]]
+## $x(".//input[@name='email']")
 
 
 try:
@@ -330,14 +341,15 @@ try:
     browser.get(link)
 
 
-    input1 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    input1 = browser.find_element(By.XPATH, './/*[@name = "firstname"]')
+    input1.send_keys("firstname")
     
-    input2 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
-    input2.send_keys(
-    	calc(input1.text)
-    	)
+    input2 = browser.find_element(By.XPATH, './/*[@name = "lastname"]')
+    input2.send_keys("lastname")
 
-    browser.execute_script("window.scrollBy(0, 100);")
+    input3 = browser.find_element(By.XPATH, './/*[@name = "email"]')
+    input3.send_keys("email")
+
 
     option1 = browser.find_element_by_id("robotCheckbox")
     option1.click()

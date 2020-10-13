@@ -477,3 +477,70 @@ file_path = os.path.join(current_dir, 'file.txt')
 
 Элемент в форме, который выглядит, как кнопка добавления файла, имеет атрибут **type="file"**. Мы должны сначала найти этот элемент с помощью селектора, а затем применить к нему метод **send_keys(file_path)**.
 
+
+
+### Alerts и как с ними жить
+
+Мы уже встречали alert** в нашем курсе, когда получали число-ответ в задачах. Также мы узнали, что можно самостоятельно вызвать alert с помощью **JavaScript**:
+```python
+alert('Hello!');
+```
+Теперь рассмотрим ситуацию, когда в сценарии теста возникает необходимость не только получить содержимое **alert**, но и нажать кнопку OK, чтобы закрыть **alert**. 
+**Alert** является модальным окном: это означает, что пользователь не может взаимодействовать дальше с интерфейсом, пока не закроет **alert**. Для этого нужно сначала переключиться на окно с **alert**, а затем принять его с помощью команды **accept()**:
+```python
+alert = browser.switch_to.alert
+alert.accept()
+```
+Чтобы получить текст из **alert, используйте свойство text объекта alert**:
+```python
+alert = browser.switch_to.alert
+alert_text = alert.text
+```
+Другой вариант модального окна, который предлагает пользователю выбор согласиться с сообщением или отказаться от него, называется **confirm**. Для переключения на окно confirm используется та же команда, что и в случае с **alert**:
+```python
+confirm = browser.switch_to.alert
+confirm.accept()
+```
+Для **confirm-окон** можно использовать следующий **метод для отказа**:
+```python
+confirm.dismiss()
+```
+То же самое, что и при нажатии пользователем кнопки "Отмена". 
+
+Третий вариант модального окна — **prompt — имеет дополнительное поле для ввода текста**. Чтобы ввести текст, используйте метод **send_keys()**:
+```python
+prompt = browser.switch_to.alert
+prompt.send_keys("My answer")
+prompt.accept()
+```
+<img alt="" src="https://ucarecdn.com/9a1f5aa3-d1b6-42c0-b340-a18e966c7a1b/" width="448" height="182">
+
+
+**pyperclip** помог, спасибо!
+```python
+alert = browser.switch_to.alert
+alert_text = alert.text
+addToClipBoard = alert_text.split(': ')[-1]
+pyperclip.copy(addToClipBoard)
+```
+и число в буфере обмена.
+
+### а как обратиться теперь к этому числу в буфере?
+
+забрать результат из **alert**
+```python
+alert_text.split(': ')[-1]
+```
+юзай эту [библиотеку](https://pypi.org/project/pyperclip/)
+
+Как то так:
+выполнения команды:
+```python
+>>> import pyperclip
+>>> pyperclip.copy('The text to be copied to the clipboard.')
+>>> pyperclip.paste()
+'The text to be copied to the clipboard.'
+```
+
+Только зачем, если из теста вставлять число в ответ, то просто используй .send_keys(имя_переменной_с_результатом) и **pyperclip** с буфером обмена не нужен. [Вот](https://github.com/VitaliyYa/sendToStepik) как я делал.
+Или [вот](https://github.com/VitaliyYa/sendToStepik/blob/master/auth.py)

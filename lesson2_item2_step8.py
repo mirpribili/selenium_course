@@ -17,7 +17,7 @@ import time
 from selenium.webdriver.common.by import By
 import math
 from selenium.webdriver.support.ui import Select
-
+import os
 
 link = "http://suninjuly.github.io/file_input.html"
 
@@ -27,35 +27,38 @@ def calc(x):
 # <input type="text" name="firstname" class="form-control" 
 # placeholder="Enter first name" required="" maxlength="32">
 
+# $("[name*='email']")
+# $x('.//button[text() = "Submit"]')
+# //input[@id='firstName']
+# //input[@type='text'] 
+# 1)Driver.FindElement(By.XPath("//input[@id='firstName']"));
+# 2)Driver.FindElement(By.Id("firstName"));
+# 3)Driver.FindElement(By.CssSelector("#firstName"));
+# //*[text()[contains(.,'firstName')]]
+## $x(".//input[@name='email']")
+
+
 try:
     browser = webdriver.Chrome()
     browser.get(link)
 
 
-    input1 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    input1 = browser.find_element(By.XPATH, './/*[@name = "firstname"]')
+    input1.send_keys("firstname")
     
-    input2 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
-    input2.send_keys(
-    	calc(input1.text)
-    	)
+    input2 = browser.find_element(By.XPATH, './/*[@name = "lastname"]')
+    input2.send_keys("lastname")
 
-    browser.execute_script("window.scrollBy(0, 100);")
-
-    option1 = browser.find_element_by_id("robotCheckbox")
-    option1.click()
-
-    browser.execute_script("window.scrollBy(0, 100);")
-
-    option2 = browser.find_element(By.XPATH, './/*[@id = "robotsRule"]')
-    option2.click()
+    input3 = browser.find_element(By.XPATH, './/*[@name = "email"]')
+    input3.send_keys("email")
 
 
-    #browser.execute_script("alert('Robots at work " + input1.text + "');")
-    #time.sleep(2)
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    file_path = os.path.join(current_dir, 'txt.txt')
+    
+    element = browser.find_element(By.XPATH, './/*[@name = "file"]')
+    element.send_keys(file_path)
 
-    browser.execute_script('''button = document.getElementsByTagName("button")[0];
-	button.scrollIntoView(true);''')
-    time.sleep(1)
 
     button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
     button.click()
