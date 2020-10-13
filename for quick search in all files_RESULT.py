@@ -295,6 +295,170 @@ f.close()
 print("OK")
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ methods.py
+import math
+
+def calc(x):
+    return str(math.log(abs(12*math.sin(int(x)))))
+
+
+if __name__ == "__main__":
+    pass
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson2_item3_step6.py
+
+'''
+    Открыть страницу http://suninjuly.github.io/redirect_accept.html
+    Нажать на кнопку
+    Переключиться на новую вкладку
+    Пройти капчу для робота и получить число-ответ
+'''
+
+from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
+import math
+from selenium.webdriver.support.ui import Select
+import os
+
+link = "http://suninjuly.github.io/redirect_accept.html"
+
+def calc(x):
+    return str(math.log(abs(12*math.sin(int(x)))))
+
+# <input type="text" name="firstname" class="form-control" 
+# placeholder="Enter first name" required="" maxlength="32">
+
+# $("[name*='email']")
+# $x('.//button[text() = "Submit"]')
+# //input[@id='firstName']
+# //input[@type='text'] 
+# 1)Driver.FindElement(By.XPath("//input[@id='firstName']"));
+# 2)Driver.FindElement(By.Id("firstName"));
+# 3)Driver.FindElement(By.CssSelector("#firstName"));
+# //*[text()[contains(.,'firstName')]]
+## $x(".//input[@name='email']")
+
+
+try:
+    browser = webdriver.Chrome()
+    browser.get(link)
+ 
+
+    button = browser.find_element(By.XPATH, './/button[text()]')
+    button.click()
+
+
+    new_window = browser.window_handles[1]
+    first_window = browser.window_handles[0]
+    browser.switch_to.window(new_window)
+
+    time.sleep(1)
+
+
+    input3 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    x = input3.text
+    y = calc(int(x))
+
+
+    input1 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
+    input1.send_keys(y)
+
+
+    button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
+    button.click()
+
+
+finally:
+    # успеваем скопировать код за 30 секунд
+    time.sleep(10)
+    # закрываем браузер после всех манипуляций
+
+    #browser.close()
+    time.sleep(2)
+    browser.quit()
+
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson2_item3_step8.py
+
+'''
+    
+    Открыть страницу http://suninjuly.github.io/explicit_wait2.html
+    Дождаться, когда цена дома уменьшится до $100 (ожидание нужно установить не меньше 12 секунд)
+    Нажать на кнопку "Book"
+    Решить уже известную нам математическую задачу (используйте ранее написанный код) и отправить решение
+'''
+
+from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
+import os
+import methods
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+link = "http://suninjuly.github.io/explicit_wait2.html"
+
+
+# <input type="text" name="firstname" class="form-control" 
+# placeholder="Enter first name" required="" maxlength="32">
+
+# $("[name*='email']")
+# $x('.//button[text() = "Submit"]')
+# //input[@id='firstName']
+# //input[@type='text'] 
+# 1)Driver.FindElement(By.XPath("//input[@id='firstName']"));
+# 2)Driver.FindElement(By.Id("firstName"));
+# 3)Driver.FindElement(By.CssSelector("#firstName"));
+# //*[text()[contains(.,'firstName')]]
+## $x(".//input[@name='email']")
+
+
+try:
+    browser = webdriver.Chrome()
+    browser.get(link)
+
+
+    WebDriverWait(browser, 12).until(
+        #EC.text_to_be_present_in_element((By.ID, "тут id"), "тут цена"))
+        EC.text_to_be_present_in_element((By.ID, "price"), "$100"))
+ 
+
+    button = browser.find_element(By.XPATH, './/button[text() = "Book"]')
+    button.click()
+
+    time.sleep(1)
+
+
+    input3 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    x = input3.text
+    y = methods.calc(int(x))
+
+
+    input1 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
+    input1.send_keys(y)
+
+
+    button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
+    button.click()
+
+
+
+finally:
+    # успеваем скопировать код за 30 секунд
+    time.sleep(10)
+    # закрываем браузер после всех манипуляций
+
+    #browser.close()
+    time.sleep(2)
+    browser.quit()
+
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson2_item2_step8.py
 
 '''
@@ -315,7 +479,7 @@ import time
 from selenium.webdriver.common.by import By
 import math
 from selenium.webdriver.support.ui import Select
-
+import os
 
 link = "http://suninjuly.github.io/file_input.html"
 
@@ -351,21 +515,12 @@ try:
     input3.send_keys("email")
 
 
-    option1 = browser.find_element_by_id("robotCheckbox")
-    option1.click()
+    current_dir = os.path.abspath(os.path.dirname(__file__))
+    file_path = os.path.join(current_dir, 'txt.txt')
+    
+    element = browser.find_element(By.XPATH, './/*[@name = "file"]')
+    element.send_keys(file_path)
 
-    browser.execute_script("window.scrollBy(0, 100);")
-
-    option2 = browser.find_element(By.XPATH, './/*[@id = "robotsRule"]')
-    option2.click()
-
-
-    #browser.execute_script("alert('Robots at work " + input1.text + "');")
-    #time.sleep(2)
-
-    browser.execute_script('''button = document.getElementsByTagName("button")[0];
-	button.scrollIntoView(true);''')
-    time.sleep(1)
 
     button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
     button.click()
@@ -857,6 +1012,81 @@ finally:
     # закрываем браузер после всех манипуляций
     browser.quit()
     
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson2_item3_step4.py
+
+'''
+    Открыть страницу http://suninjuly.github.io/alert_accept.html
+    Нажать на кнопку
+    Принять confirm
+    На новой странице решить капчу для роботов, чтобы получить число с ответом
+'''
+
+from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
+import math
+from selenium.webdriver.support.ui import Select
+import os
+
+link = "http://suninjuly.github.io/alert_accept.html"
+
+def calc(x):
+    return str(math.log(abs(12*math.sin(int(x)))))
+
+# <input type="text" name="firstname" class="form-control" 
+# placeholder="Enter first name" required="" maxlength="32">
+
+# $("[name*='email']")
+# $x('.//button[text() = "Submit"]')
+# //input[@id='firstName']
+# //input[@type='text'] 
+# 1)Driver.FindElement(By.XPath("//input[@id='firstName']"));
+# 2)Driver.FindElement(By.Id("firstName"));
+# 3)Driver.FindElement(By.CssSelector("#firstName"));
+# //*[text()[contains(.,'firstName')]]
+## $x(".//input[@name='email']")
+
+
+try:
+    browser = webdriver.Chrome()
+    browser.get(link)
+ 
+
+    button = browser.find_element(By.XPATH, './/button[text()]')
+    button.click()
+
+
+    confirm = browser.switch_to.alert
+    confirm.accept()
+
+    time.sleep(1)
+
+
+    input3 = browser.find_element(By.XPATH, './/*[@id = "input_value"]')
+    x = input3.text
+    y = calc(int(x))
+
+
+    input1 = browser.find_element(By.XPATH, './/*[@id = "answer"]')
+    input1.send_keys(y)
+
+
+    button = browser.find_element(By.XPATH, './/button[text() = "Submit"]')
+    button.click()
+
+
+finally:
+    # успеваем скопировать код за 30 секунд
+    time.sleep(10)
+    # закрываем браузер после всех манипуляций
+
+    #browser.close()
+    time.sleep(2)
+    browser.quit()
+
+
+
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson2_item2_step3.py
 
