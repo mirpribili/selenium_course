@@ -545,4 +545,9 @@ alert_text.split(': ')[-1]
 ```
 
 Только зачем, если из теста вставлять число в ответ, то просто используй .send_keys(имя_переменной_с_результатом) и **pyperclip** с буфером обмена не нужен. [Вот](https://github.com/VitaliyYa/sendToStepik) как я делал.
-Или [вот](https://github.com/VitaliyYa/sendToStepik/blob/master/auth.py)
+P.S ADD [sendToStepik auth](https://github.com/VitaliyYa/sendToStepik/blob/master/auth.py)
+
+# Сопоставьте типы модальных окон в браузере с методами WebDriver для взаимодействия с ним:
+
+<img alt="" src="/[img]/alert.png" width="605" height="154">
+
