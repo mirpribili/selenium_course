@@ -94,6 +94,12 @@ This is a repository for saving the codes from the course on learning python tes
 - pip install pytest==5.1.1
 - 
 
+#### STEP 8
+- pip freeze > requirements.txt
+- - *Эта команда сохранит все версии пакетов в специальный файл requirements.txt.
+Как их оттуда достать? Попробуйте создать новое виртуальное окружение (если нужно, вернитесь в модуль 1 за инструкциями) и активировать. После чего выполните команду:*
+- pip install -r requirements.txt
+
 ##### Пример хороших сообщений:  
 
 - "add readme"

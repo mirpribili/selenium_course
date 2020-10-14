@@ -1,4 +1,6 @@
 '''
+https://coderlessons.com/tutorials/python-technologies/uznaite-pytest/pytest-kratkoe-rukovodstvo
+
 import unittest
 
 class TestUtilDate(unittest.TestCase):
@@ -27,7 +29,7 @@ if __name__ == '__main__':
 
 # То же самое в PyTest:
 
-
+import os
 import pytest
 
 def setup_module(module):
@@ -46,3 +48,7 @@ def test_isupper():
     
 def test_failed_upper():
     assert 'foo'.upper() == 'FOo'
+
+if __name__ == "__main__":
+	os.system ("pytest " + os.path.basename(__file__) + " --tb=line ")
+    #os.system ("pytest -v " + os.path.basename(__file__) + " --tb=line ")

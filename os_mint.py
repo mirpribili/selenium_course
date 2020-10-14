@@ -43,8 +43,9 @@ while True:
     f.close()
     if not "time=" in read:
         os.system("sudo service network-manager restart")
+        #https://stackoverflow.com/questions/48639609/sudo-pass-automatic-password-in-python
         print(f"{bcolors.FAIL}Try reload{bcolors.ENDC}")
-        errors =+ 1
+        errors += 1
     else:
         print(f"{bcolors.OKGREEN}OK. Continue... {errors}{bcolors.ENDC}")
     
