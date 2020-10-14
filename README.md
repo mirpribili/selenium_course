@@ -1,7 +1,9 @@
-# How to start
-
-## mint CMD
-
+# selenium lessons 
+## How to start in mitn OS
+### View another page
+[help selenium](/Help_Selenium.md)
+[help testing](/testing.md)
+[help story](/story.md)
 #### STEP 1
 - conda deactivate
 - conda activate
@@ -33,7 +35,7 @@
 - $HOME/enviroments/selenium_env/bin/python3.7 -m pip install --upgrade pip
 - pip install selenium==3.14.0
 - pip list
-- 
+
 #### STEP 2
 - cd $HOME/enviroments/selenium_env/chromedriver86
 - sudo mv chromedriver /usr/local/bin/chromedriver
@@ -54,7 +56,7 @@
 - sudo chmod +x /usr/local/bin/chromedriver
 - chromedriver
 - - ctrl+c
-- 
+
 #### STEP 3
 - cd $HOME
 - git --version
@@ -67,25 +69,25 @@
 - git add .
 - git commit -m "test ssh Version 1.0"
 - git push origin
-- 
+
 #### STEP 4
 - git add .;git commit -m "Add help Selentium.md";git push origin
 - 
 - conda deactivate; source $HOME/enviroments/selenium_env/bin/activate
-- python  ~/selenium_course/lesson6_step4.py
-- 
+- python  ~/selenium_course/lesson6_step4.py ~
+
 #### STEP 5
 - cd $HOME/selenium_course;python  ~/selenium_course/lesson2_item2_step8.py
 - cd $HOME/selenium_course;git add .;git commit -m "Add help Selentium.md";git push origin
 - 
-- 
+
 #### STEP 6
 - cd $HOME/selenium_course;python  ~/selenium_course/os_mint.py
 - 
 - 
 - 
 - 
-- 
+
 ##### OFF TOP
 - NO
 - - sudo apt install dsniff
@@ -96,3 +98,9 @@
 - - - ping -c 1 homeserver >/dev/null && echo 'Successfully pinged device!'
 - - - ping 8.8.8.8 -i 2 >/dev/null && echo 'Successfully pinged device!'
 - - - ping -c 1 127.0.0.1 &> /dev/null && echo success || echo fail
+- - ping -c 1 8.8.8.8 &> /dev/null && echo success || sudo service network-manager restart
+
+### LINK TEST AND RELOAD
+- 
+- sudo apt  install nmap
+- nmap -sn -oG status.txt -v 192.168.1.0/24

@@ -18,20 +18,34 @@ class bcolors:
 
 print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
 
-myCmd = 'ls -la' 
+
+
+
+
+myCmd = 'sudo ls -la' 
 os.system (myCmd)
 
 #myCmd = "ping -c 1 8.8.8.8 &> /dev/null && echo success || echo fail & sudo service network-manager restart"
 myCmd = "ping -c 1 8.8.8.8 &> /dev/null && echo success || sudo service network-manager restart"
-
+myCmd = "ping -c 1 8.8.8.8 > txt.txt"
 #myCmd = "ping -c 1 8.8.8.8"
 i = 0
 while True:
-	time.sleep(2)
-	i += 1
-	#print(i)
-	print(f"{bcolors.WARNING}==={i}==={bcolors.ENDC}")
-	os.system(myCmd)
+    time.sleep(2)
+    i += 1
+    #print(i)
+    print(f"{bcolors.WARNING}==={i}==={bcolors.ENDC}")
+    os.system(myCmd)
+    f = open("txt.txt")
+    read = f.read()
+    #print(f.read())
+    f.close()
+    if not "time=" in read:
+        os.system("sudo service network-manager restart")
+        print(f"{bcolors.FAIL}Try reload{bcolors.ENDC}")
+    else:
+        print(f"{bcolors.OKGREEN}OK. Continue{bcolors.ENDC}")
+    
 
 	#myCmd = os.popen(myCmd).read()
 	#print(myCmd)
