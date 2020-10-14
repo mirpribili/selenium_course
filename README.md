@@ -89,6 +89,22 @@
 - 
 - 
 
+#### Пример хороших сообщений:  
+
+- "add readme"
+- "initial commit"
+- "simple test case added"
+- "homework from previous module"
+
+#### Пример плохих сообщений:
+
+- "commit message"
+- "commit1"
+- "asdasdads"
+- "something"
+
+
+
 ##### OFF TOP
 - NO
 - - sudo apt install dsniff
