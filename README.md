@@ -8,6 +8,7 @@ This is a repository for saving the codes from the course on learning python tes
 - **[help testing](/testing.md)**
 - **[story](/story.md)**
 - **[help pytest](/pytest.md)**
+- **[help freez](/freez.md)**
 
 #### STEP 1
 - conda deactivate
