@@ -30,6 +30,7 @@ myCmd = "ping -c 1 8.8.8.8 &> /dev/null && echo success || sudo service network-
 myCmd = "ping -c 1 8.8.8.8 > txt.txt"
 #myCmd = "ping -c 1 8.8.8.8"
 i = 0
+errors = 0
 while True:
     time.sleep(2)
     i += 1
@@ -43,8 +44,9 @@ while True:
     if not "time=" in read:
         os.system("sudo service network-manager restart")
         print(f"{bcolors.FAIL}Try reload{bcolors.ENDC}")
+        errors =+ 1
     else:
-        print(f"{bcolors.OKGREEN}OK. Continue{bcolors.ENDC}")
+        print(f"{bcolors.OKGREEN}OK. Continue... {errors}{bcolors.ENDC}")
     
 
 	#myCmd = os.popen(myCmd).read()
