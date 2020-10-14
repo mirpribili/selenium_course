@@ -1,9 +1,10 @@
 # selenium lessons 
 ## How to start in mitn OS
 ### View another page
-[help selenium](/Help_Selenium.md)
-[help testing](/testing.md)
-[help story](/story.md)
+- [help selenium](/Help_Selenium.md)
+- [help testing](/testing.md)
+- [help story](/story.md)
+
 #### STEP 1
 - conda deactivate
 - conda activate
