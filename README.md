@@ -1,9 +1,13 @@
-# selenium lessons 
+# Stepik---selenium-python-course
+
+This is a repository for saving the codes from the course on learning python test automation by Selenium [link](https://stepik.org/lesson/187065/step/7?unit=161976)
+
 ## How to start in mitn OS
 ### View another page
-- [help selenium](/Help_Selenium.md)
-- [help testing](/testing.md)
-- [help story](/story.md)
+- **[help selenium](/Help_Selenium.md)**
+- **[help testing](/testing.md)**
+- **[story](/story.md)**
+- **[help pytest](/pytest.md)**
 
 #### STEP 1
 - conda deactivate
@@ -85,18 +89,19 @@
 #### STEP 6
 - cd $HOME/selenium_course;python  ~/selenium_course/os_mint.py
 - 
-- 
-- 
+
+#### STEP 7
+- pip install pytest==5.1.1
 - 
 
-#### Пример хороших сообщений:  
+##### Пример хороших сообщений:  
 
 - "add readme"
 - "initial commit"
 - "simple test case added"
 - "homework from previous module"
 
-#### Пример плохих сообщений:
+##### Пример плохих сообщений:
 
 - "commit message"
 - "commit1"
@@ -117,7 +122,7 @@
 - - - ping -c 1 127.0.0.1 &> /dev/null && echo success || echo fail
 - - ping -c 1 8.8.8.8 &> /dev/null && echo success || sudo service network-manager restart
 
-### LINK TEST AND RELOAD
+##### LINK TEST AND RELOAD
 - 
 - sudo apt  install nmap
 - nmap -sn -oG status.txt -v 192.168.1.0/24
