@@ -594,3 +594,328 @@ link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.p
 <span><p>Вот здесь хорошая документация:&nbsp;<a href="https://habr.com/ru/post/426699/" rel="noopener noreferrer nofollow" target="_blank">https://habr.com/ru/post/426699/</a></p></span>
 
 
+<span><h2>Маркировка тестов часть 1</h2>
+
+<p>Когда тестов становится много, хорошо иметь способ разделять тесты не только по названиям, но также по каким-нибудь заданным нами категориям. Например, мы можем выбрать небольшое количество критичных тестов (smoke), которые нужно запускать на каждый коммит разработчиков, а остальные тесты обозначить как регрессионные (regression) и запускать их только перед релизом. Или у нас могут быть тесты,&nbsp;специфичные для конкретного браузера (internet explorer 11), и мы хотим запускать эти тесты только под данный браузер. Для выборочного запуска таких тестов в PyTest используется маркировка тестов или <strong>метки (marks)</strong>. Для маркировки теста нужно&nbsp;написать декоратор вида <strong>@pytest.mark.mark_name</strong>, где mark_name&nbsp;— произвольная строка.</p>
+
+<p>Давайте разделим тесты в одном из предыдущих примеров на smoke и regression.</p>
+
+<p><strong>test_fixture8.py:</strong></p>
+
+<pre><code class="language-python hljs"><span class="hljs-keyword"><span class="hljs-keyword">import</span></span> pytest
+<span class="hljs-keyword"><span class="hljs-keyword">from</span></span> selenium <span class="hljs-keyword"><span class="hljs-keyword">import</span></span> webdriver
+
+link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.pythonanywhere.com/"</span></span>
+
+
+<span class="hljs-meta"><span class="hljs-meta">@pytest.fixture(scope="function")</span></span>
+<span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">browser</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">()</span></span></span><span class="hljs-function">:</span></span>
+    print(<span class="hljs-string"><span class="hljs-string">"\nstart browser for test.."</span></span>)
+    browser = webdriver.Chrome()
+    <span class="hljs-keyword"><span class="hljs-keyword">yield</span></span> browser
+    print(<span class="hljs-string"><span class="hljs-string">"\nquit browser.."</span></span>)
+    browser.quit()
+
+
+<span class="hljs-class"><span class="hljs-keyword"><span class="hljs-class"><span class="hljs-keyword">class</span></span></span><span class="hljs-class"> </span><span class="hljs-title"><span class="hljs-class"><span class="hljs-title">TestMainPage1</span></span></span><span class="hljs-params"><span class="hljs-class"><span class="hljs-params">()</span></span></span><span class="hljs-class">:</span></span>
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.smoke</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_login_link</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"#login_link"</span></span>)
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.regression</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_basket_link_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">".basket-mini .btn-group &gt; a"</span></span>)
+
+</code></pre>
+
+<p>Чтобы запустить тест с нужной маркировкой, нужно передать в командной строке параметр <strong>-m</strong> и нужную метку:</p>
+
+<pre><code class="language-python hljs">pytest -s -v -m smoke test_fixture8.py</code></pre>
+
+<p>Если всё сделано правильно, то должен запуститься только тест с маркировкой smoke.</p>
+
+<p>При этом вы увидите warning, то есть&nbsp;предупреждение:</p>
+
+<pre><code class="language-bash hljs">PytestUnknownMarkWarning: Unknown pytest.mark.smoke - is this a typo?  You can register custom marks to avoid this warning - <span class="hljs-keyword"><span class="hljs-keyword">for</span></span> details, see https://docs.pytest.org/en/latest/mark.html
+    PytestUnknownMarkWarning,</code></pre>
+
+<p>Это предупреждение появилось потому, что в последних версиях PyTest настоятельно рекомендуется регистрировать&nbsp;метки явно перед использованием. Это, например, позволяет избегать опечаток, когда вы можете ошибочно пометить&nbsp;ваш тест несуществующей меткой, и он будет пропускаться при прогоне тестов.</p>
+
+<h3>Как же регистрировать метки?</h3>
+
+<p>Создайте файл pytest.ini в корневой директории вашего тестового проекта и добавьте в файл следующие строки:</p>
+
+<pre><code class="language-no-highlight hljs">[pytest]
+markers =
+    smoke: marker for smoke tests
+    regression: marker for regression tests</code></pre>
+
+<p>Текст после знака ":" является поясняющим&nbsp;— его можно не писать.</p>
+
+<p>Снова запустите тесты:</p>
+
+<pre><code class="language-python hljs">pytest -s -v -m smoke test_fixture8.py</code></pre>
+
+<p>Теперь предупреждений быть не должно.</p>
+
+<p>&nbsp;</p>
+
+<p>Так же можно маркировать целый тестовый класс. В этом случае&nbsp;маркировка будет применена ко всем тестовым методам, входящим в класс.</p></span>
+
+
+
+<span><h2>Маркировка тестов часть 2</h2>
+
+<h3><strong>Инверсия</strong></h3>
+
+<p>Чтобы запустить все тесты,&nbsp;не имеющие заданную маркировку, можно использовать инверсию. Для запуска всех тестов, не отмеченных как smoke, нужно выполнить команду:</p>
+
+<pre><code class="language-bash hljs">pytest -s -v -m <span class="hljs-string"><span class="hljs-string">"not smoke"</span></span> test_fixture8.py</code></pre>
+
+<h3><strong>Объединение тестов с разными маркировками</strong></h3>
+
+<p>Для запуска тестов с разными метками можно использовать логическое ИЛИ. Запустим&nbsp;smoke и regression-тесты:</p>
+
+<pre><code class="language-bash hljs">pytest -s -v -m <span class="hljs-string"><span class="hljs-string">"smoke or regression"</span></span> test_fixture8.py</code></pre>
+
+<h3><strong>Выбор тестов, имеющих несколько маркировок</strong></h3>
+
+<p>Предположим, у нас есть smoke-тесты, которые нужно запускать только для определенной операционной системы, например, для Windows 10. Зарегистрируем метку win10 в файле pytest.ini, а также добавим к одному из тестов эту метку.</p>
+
+<p><strong>pytest.ini:</strong></p>
+
+<pre><code class="language-no-highlight hljs">[pytest]
+markers =
+    smoke: marker for smoke tests
+    regression: marker for regression tests
+    win10</code></pre>
+
+<p><strong>test_fixture81.py:</strong></p>
+
+<pre><code class="language-python hljs"><span class="hljs-keyword"><span class="hljs-keyword">import</span></span> pytest
+<span class="hljs-keyword"><span class="hljs-keyword">from</span></span> selenium <span class="hljs-keyword"><span class="hljs-keyword">import</span></span> webdriver
+
+link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.pythonanywhere.com/"</span></span>
+
+
+<span class="hljs-meta"><span class="hljs-meta">@pytest.fixture(scope="function")</span></span>
+<span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">browser</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">()</span></span></span><span class="hljs-function">:</span></span>
+    print(<span class="hljs-string"><span class="hljs-string">"\nstart browser for test.."</span></span>)
+    browser = webdriver.Chrome()
+    <span class="hljs-keyword"><span class="hljs-keyword">yield</span></span> browser
+    print(<span class="hljs-string"><span class="hljs-string">"\nquit browser.."</span></span>)
+    browser.quit()
+
+
+<span class="hljs-class"><span class="hljs-keyword"><span class="hljs-class"><span class="hljs-keyword">class</span></span></span><span class="hljs-class"> </span><span class="hljs-title"><span class="hljs-class"><span class="hljs-title">TestMainPage1</span></span></span><span class="hljs-params"><span class="hljs-class"><span class="hljs-params">(object)</span></span></span><span class="hljs-class">:</span></span>
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.smoke</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_login_link</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"#login_link"</span></span>)
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.smoke</span></span>
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.win10</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_basket_link_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">".basket-mini .btn-group &gt; a"</span></span>)
+
+</code></pre>
+
+<p>Чтобы запустить только smoke-тесты для Windows 10, нужно использовать логическое И:</p>
+
+<pre><code class="language-bash hljs">pytest -s -v -m <span class="hljs-string"><span class="hljs-string">"smoke and win10"</span></span> test_fixture81.py</code></pre>
+
+<p>Должен выполнится тест&nbsp;test_guest_should_see_basket_link_on_the_main_page.&nbsp;</p></span>
+
+
+<span><h2><strong>Пропуск тестов</strong></h2>
+
+<p>В PyTest есть стандартные метки, которые позволяют пропустить тест при сборе тестов для запуска&nbsp;(то есть&nbsp;не запускать тест) или запустить, но отметить особенным статусом тот тест, который ожидаемо упадёт из-за наличия бага, чтобы он не влиял на результаты прогона всех тестов. Эти метки&nbsp;не требуют&nbsp;дополнительного объявления в pytest.ini.</p>
+
+<p><strong>Пропустить тест</strong></p>
+
+<p>Итак, чтобы пропустить тест, его отмечают в коде&nbsp;как <strong>@pytest.mark.skip</strong>:</p>
+
+<pre><code class="language-python hljs"><span class="hljs-keyword"><span class="hljs-keyword">import</span></span> pytest
+<span class="hljs-keyword"><span class="hljs-keyword">from</span></span> selenium <span class="hljs-keyword"><span class="hljs-keyword">import</span></span> webdriver
+
+link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.pythonanywhere.com/"</span></span>
+
+<span class="hljs-meta"><span class="hljs-meta">@pytest.fixture(scope="function")</span></span>
+<span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">browser</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">()</span></span></span><span class="hljs-function">:</span></span>
+    print(<span class="hljs-string"><span class="hljs-string">"\nstart browser for test.."</span></span>)
+    browser = webdriver.Chrome()
+    <span class="hljs-keyword"><span class="hljs-keyword">yield</span></span> browser
+    print(<span class="hljs-string"><span class="hljs-string">"\nquit browser.."</span></span>)
+    browser.quit()
+
+
+<span class="hljs-class"><span class="hljs-keyword"><span class="hljs-class"><span class="hljs-keyword">class</span></span></span><span class="hljs-class"> </span><span class="hljs-title"><span class="hljs-class"><span class="hljs-title">TestMainPage1</span></span></span><span class="hljs-params"><span class="hljs-class"><span class="hljs-params">()</span></span></span><span class="hljs-class">:</span></span>
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.skip</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_login_link</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"#login_link"</span></span>)
+
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_basket_link_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">".basket-mini .btn-group &gt; a"</span></span>)
+</code></pre>
+
+<p>В результатах теста мы увидим, что один тест был пропущен, а другой успешно прошёл: "<strong>1 passed, 1 skipped"</strong>.&nbsp;</p></span>
+
+
+
+<span><h2>XFail: помечать тест как ожидаемо падающий</h2>
+
+<p><strong>Отметить тест как падающий</strong></p>
+
+<p>Теперь добавим в наш тестовый класс тест, который проверяет наличие кнопки "Избранное":</p>
+
+<pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_search_button_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span> 
+     browser.get(link)
+     browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"button.favorite"</span></span>)</code></pre>
+
+<p>Предположим, что такая кнопка должна быть, но из-за изменений в коде она&nbsp;пропала. Пока разработчики исправляют баг, мы хотим, чтобы результат прогона ﻿всех ﻿наших тестов был успешен, но&nbsp;падающий тест помечался соответствующим образом, чтобы про него не забыть. Добавим маркировку <strong>@pytest.mark.xfail </strong>для падающего теста.</p>
+
+<p><strong>test_fixture10.py:</strong></p>
+
+<pre><code class="language-python hljs"><span class="hljs-keyword"><span class="hljs-keyword">import</span></span> pytest
+<span class="hljs-keyword"><span class="hljs-keyword">from</span></span> selenium <span class="hljs-keyword"><span class="hljs-keyword">import</span></span> webdriver
+
+link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.pythonanywhere.com/"</span></span>
+
+
+<span class="hljs-meta"><span class="hljs-meta">@pytest.fixture(scope="function")</span></span>
+<span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">browser</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">()</span></span></span><span class="hljs-function">:</span></span>
+    print(<span class="hljs-string"><span class="hljs-string">"\nstart browser for test.."</span></span>)
+    browser = webdriver.Chrome()
+    <span class="hljs-keyword"><span class="hljs-keyword">yield</span></span> browser
+    print(<span class="hljs-string"><span class="hljs-string">"\nquit browser.."</span></span>)
+    browser.quit()
+
+
+<span class="hljs-class"><span class="hljs-keyword"><span class="hljs-class"><span class="hljs-keyword">class</span></span></span><span class="hljs-class"> </span><span class="hljs-title"><span class="hljs-class"><span class="hljs-title">TestMainPage1</span></span></span><span class="hljs-params"><span class="hljs-class"><span class="hljs-params">()</span></span></span><span class="hljs-class">:</span></span>
+
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_login_link</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"#login_link"</span></span>)
+
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_basket_link_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">".basket-mini .btn-group &gt; a"</span></span>)
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.xfail</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_search_button_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"button.favorite"</span></span>)
+
+</code></pre>
+
+<p>Запустим наши тесты:</p>
+
+<pre><code class="language-no-highlight hljs">pytest -v test_fixture10.py</code></pre>
+
+<p>Наш упавший тест теперь отмечен как <strong>xfail</strong>, но результат&nbsp;прогона тестов помечен как успешный:</p>
+
+<p><img alt="" src="https://ucarecdn.com/929c02c8-d2ab-4ecd-a8db-e94d93caecaa/"></p>
+
+<p>Когда баг починят, мы это узнаем, ﻿﻿так как теперь тест будет отмечен как <strong>XPASS </strong>(“unexpectedly passing”&nbsp;— неожиданно проходит). После этого маркировку <strong>xfail </strong>для теста можно удалить. Кстати, к маркировке <strong>xfail</strong> можно добавлять параметр <strong>reason</strong>.&nbsp;Чтобы увидеть это сообщение в консоли, при запуске&nbsp;нужно&nbsp;добавлять параметр pytest <strong>-rx</strong>.</p>
+
+<p><strong>test_fixture10a.py:</strong></p>
+
+<pre><code class="language-python hljs"><span class="hljs-keyword"><span class="hljs-keyword">import</span></span> pytest
+<span class="hljs-keyword"><span class="hljs-keyword">from</span></span> selenium <span class="hljs-keyword"><span class="hljs-keyword">import</span></span> webdriver
+
+link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.pythonanywhere.com/"</span></span>
+
+
+<span class="hljs-meta"><span class="hljs-meta">@pytest.fixture(scope="function")</span></span>
+<span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">browser</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">()</span></span></span><span class="hljs-function">:</span></span>
+    print(<span class="hljs-string"><span class="hljs-string">"\nstart browser for test.."</span></span>)
+    browser = webdriver.Chrome()
+    <span class="hljs-keyword"><span class="hljs-keyword">yield</span></span> browser
+    print(<span class="hljs-string"><span class="hljs-string">"\nquit browser.."</span></span>)
+    browser.quit()
+
+
+<span class="hljs-class"><span class="hljs-keyword"><span class="hljs-class"><span class="hljs-keyword">class</span></span></span><span class="hljs-class"> </span><span class="hljs-title"><span class="hljs-class"><span class="hljs-title">TestMainPage1</span></span></span><span class="hljs-params"><span class="hljs-class"><span class="hljs-params">()</span></span></span><span class="hljs-class">:</span></span>
+
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_login_link</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"#login_link"</span></span>)
+
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_basket_link_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">".basket-mini .btn-group &gt; a"</span></span>)
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.xfail(reason="fixing this bug right now")</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_search_button_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"button.favorite"</span></span>)
+
+</code></pre>
+
+<p>Запустим наши тесты:</p>
+
+<pre><code class="language-no-highlight hljs">pytest -rx -v test_fixture10a.py</code></pre>
+
+<p>&nbsp;</p>
+
+<p>Сравните вывод в первом и во втором случае.</p>
+
+<p><img alt="" src="https://ucarecdn.com/0bf951ab-4bad-4d1f-9856-6e0090714627/"></p>
+
+<p><strong>XPASS-тесты</strong></p>
+
+<p>Поменяем селектор в последнем тесте, чтобы тест начал проходить.</p>
+
+<p><strong>test_fixture10b.py:</strong></p>
+
+<pre><code class="language-python hljs"><span class="hljs-keyword"><span class="hljs-keyword">import</span></span> pytest
+<span class="hljs-keyword"><span class="hljs-keyword">from</span></span> selenium <span class="hljs-keyword"><span class="hljs-keyword">import</span></span> webdriver
+
+link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.pythonanywhere.com/"</span></span>
+
+
+<span class="hljs-meta"><span class="hljs-meta">@pytest.fixture(scope="function")</span></span>
+<span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">browser</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">()</span></span></span><span class="hljs-function">:</span></span>
+    print(<span class="hljs-string"><span class="hljs-string">"\nstart browser for test.."</span></span>)
+    browser = webdriver.Chrome()
+    <span class="hljs-keyword"><span class="hljs-keyword">yield</span></span> browser
+    print(<span class="hljs-string"><span class="hljs-string">"\nquit browser.."</span></span>)
+    browser.quit()
+
+
+<span class="hljs-class"><span class="hljs-keyword"><span class="hljs-class"><span class="hljs-keyword">class</span></span></span><span class="hljs-class"> </span><span class="hljs-title"><span class="hljs-class"><span class="hljs-title">TestMainPage1</span></span></span><span class="hljs-params"><span class="hljs-class"><span class="hljs-params">()</span></span></span><span class="hljs-class">:</span></span>
+
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_login_link</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"#login_link"</span></span>)
+
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_basket_link_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">".basket-mini .btn-group &gt; a"</span></span>)
+
+<span class="hljs-meta"><span class="hljs-meta">    @pytest.mark.xfail(reason="fixing this bug right now")</span></span>
+    <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">def</span></span></span><span class="hljs-function"> </span><span class="hljs-title"><span class="hljs-function"><span class="hljs-title">test_guest_should_see_search_button_on_the_main_page</span></span></span><span class="hljs-params"><span class="hljs-function"><span class="hljs-params">(self, browser)</span></span></span><span class="hljs-function">:</span></span>
+        browser.get(link)
+        browser.find_element_by_css_selector(<span class="hljs-string"><span class="hljs-string">"input.btn.btn-default"</span></span>)
+
+</code></pre>
+
+<p>Запустите тесты. Здесь мы добавили&nbsp;символ X в параметр -r, чтобы получить подробную информацию по XPASS-тестам:</p>
+
+<pre><code class="language-bash hljs">pytest -rX -v test_fixture10b.py</code></pre>
+
+<p>И изучите&nbsp;отчёт:&nbsp;</p>
+
+<p><img alt="" src="https://ucarecdn.com/727f6e0f-ef30-4f61-b3ab-65d8d2f7e8d3/"></p>
+
+<p>Дополнительно об использовании этих меток&nbsp;можно&nbsp;почитать в документации:&nbsp;<a href="https://docs.pytest.org/en/latest/skipping.html" rel="noopener noreferrer nofollow" target="_blank">Skip and xfail: dealing with tests that cannot succeed</a>.&nbsp; Там есть много разных интересных особенностей, например, как пропускать тест только при выполнении условия, как сделать так, чтобы внезапно прошедший xfailed тест в отчете стал красным, и так далее.&nbsp;</p></span>
+
+
