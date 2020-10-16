@@ -16,7 +16,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
+#print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
 
 
 
@@ -35,7 +35,8 @@ while True:
     time.sleep(2)
     i += 1
     #print(i)
-    print(f"{bcolors.WARNING}==={i}==={bcolors.ENDC}")
+    #print(f"{bcolors.WARNING}==={i}==={bcolors.ENDC}")
+    print("i: "+ str(i))
     os.system(myCmd)
     f = open("txt.txt")
     read = f.read()
@@ -44,10 +45,13 @@ while True:
     if not "time=" in read:
         os.system("sudo service network-manager restart")
         #https://stackoverflow.com/questions/48639609/sudo-pass-automatic-password-in-python
-        print(f"{bcolors.FAIL}Try reload{bcolors.ENDC}")
+        #https://askubuntu.com/questions/155791/how-do-i-sudo-a-command-in-a-script-without-being-asked-for-a-password
+        #print(f"{bcolors.FAIL}Try reload{bcolors.ENDC}")
+        print("reload")
         errors += 1
     else:
-        print(f"{bcolors.OKGREEN}OK. Continue... {errors}{bcolors.ENDC}")
+        #print(f"{bcolors.OKGREEN}OK. Continue... {errors}{bcolors.ENDC}")
+        print("errors: " + str(errors))
     
 
 	#myCmd = os.popen(myCmd).read()

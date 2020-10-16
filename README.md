@@ -83,12 +83,13 @@ This is a repository for saving the codes from the course on learning python tes
 - python  ~/selenium_course/lesson6_step4.py ~
 
 #### STEP 5
-- cd $HOME/selenium_course;python  ~/selenium_course/lesson2_item2_step8.py
-- cd $HOME/selenium_course;git add .;git commit -m "Add help Selentium.md";git push origin
+- **cd $HOME/selenium_course;python  ~/selenium_course/lesson2_item2_step8.py**
+- **cd $HOME/selenium_course;git add .;git commit -m "Add help Selentium.md";git push origin**
 - 
 
 #### STEP 6
 - cd $HOME/selenium_course;python  ~/selenium_course/os_mint.py
+- **cd $HOME/selenium_course;sudo python os_mint.py**
 - 
 
 #### STEP 7
@@ -133,3 +134,12 @@ This is a repository for saving the codes from the course on learning python tes
 - 
 - sudo apt  install nmap
 - nmap -sn -oG status.txt -v 192.168.1.0/24
+
+>	_ ▲		◄--		_ |		--►
+>	_ |		_ _		_ ▼		_ _
+
+>	◄--		_ ▲		--►		▲ _		◄--		_ |		--►		| _		◄--
+>	─ ─		_ |		_ _		| _		_ _		_ ▼		_ _		▼ _		_ _
+
+
+
