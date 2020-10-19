@@ -130,7 +130,6 @@ This is a repository for saving the codes from the course on learning python tes
 - "something"
 
 
-
 ##### OFF TOP
 - NO
 - - sudo apt install dsniff
