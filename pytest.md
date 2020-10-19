@@ -920,3 +920,7 @@ link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.p
 <p>Дополнительно об использовании этих меток&nbsp;можно&nbsp;почитать в документации:&nbsp;<a href="https://docs.pytest.org/en/latest/skipping.html" rel="noopener noreferrer nofollow" target="_blank">Skip and xfail: dealing with tests that cannot succeed</a>.&nbsp; Там есть много разных интересных особенностей, например, как пропускать тест только при выполнении условия, как сделать так, чтобы внезапно прошедший xfailed тест в отчете стал красным, и так далее.&nbsp;</p></span>
 
 
+<img alt="" src="/[img]/1.png" width="700" height="633">
+<img alt="" src="/[img]/2.png" width="1019" height="186">
+<img alt="" src="/[img]/3.png" width="1022" height="192">
+<img alt="" src="/[img]/4.png" width="843" height="173">
