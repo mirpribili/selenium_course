@@ -66,7 +66,7 @@ This is a repository for saving the codes from the course on learning python tes
 #### STEP 3
 - cd $HOME
 - git --version
-- git clone https://github.com/mirpribili/selenium_course.git
+- **git clone https://github.com/mirpribili/selenium_course.git**
 - cd $HOME/selenium_course
 - git status
 - git remote set-url origin git@github.com:mirpribili/selenium_course.git
@@ -84,13 +84,13 @@ This is a repository for saving the codes from the course on learning python tes
 
 #### STEP 5
 - **cd $HOME/selenium_course;python  ~/selenium_course/lesson2_item2_step8.py**
+- **conda deactivate; source $HOME/enviroments/selenium_env/bin/activate; cd $HOME/selenium_course;python  ~/selenium_course/lesson2_item2_step8.py**
 - **cd $HOME/selenium_course;git add .;git commit -m "Add help Selentium.md";git push origin**
 - 
 
 #### STEP 6
 - cd $HOME/selenium_course;python  ~/selenium_course/os_mint.py
 - **cd $HOME/selenium_course;sudo python os_mint.py**
-- 
 
 #### STEP 7
 - pip install pytest==5.1.1
@@ -101,6 +101,19 @@ This is a repository for saving the codes from the course on learning python tes
 - - *Эта команда сохранит все версии пакетов в специальный файл requirements.txt.
 Как их оттуда достать? Попробуйте создать новое виртуальное окружение (если нужно, вернитесь в модуль 1 за инструкциями) и активировать. После чего выполните команду:*
 - pip install -r requirements.txt
+
+#### STEP9
+- cd $HOME
+- **git clone https://github.com/mirpribili/selenium_course__pytest_language.git**
+- cd selenium_course__pytest_language
+- git --version
+- git status
+- git remote set-url origin git@github.com:mirpribili/selenium_course__pytest_language.git
+- git remote -v
+- git status
+- git add .;git commit -m "add readme";git push origin
+
+
 
 ##### Пример хороших сообщений:  
 
