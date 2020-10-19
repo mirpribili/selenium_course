@@ -259,6 +259,83 @@ finally:
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item3_step3_test.py
+from selenium import webdriver
+import time
+import os
+import pytest
+
+def setup_module(module):
+    #init_something()
+    pass
+
+def teardown_module(module):
+    #teardown_something()
+    pass
+
+def test_abs1():
+    try:
+        browser = webdriver.Chrome()
+        browser.maximize_window()
+        browser.get("http://suninjuly.github.io/registration1.html")
+        browser.find_element_by_xpath('.//label[text()=\'First name*\']/following-sibling::input').send_keys("pasha")
+        browser.find_element_by_xpath('.//label[text()=\'Last name*\']/following-sibling::input').send_keys("zzzz")
+        browser.find_element_by_xpath('.//label[text()=\'Email*\']/following-sibling::input').send_keys("pasha@ya.ru")
+        browser.find_element_by_xpath(".//button[text()='Submit']").click()
+
+        # Проверяем, что смогли зарегистрироваться
+        # ждем загрузки страницы
+        time.sleep(1)
+
+        # находим элемент, содержащий текст
+        welcome_text_elt = browser.find_element_by_tag_name("h1")
+        # записываем в переменную welcome_text текст из элемента welcome_text_elt
+        welcome_text = welcome_text_elt.text
+    finally:
+        # ожидание чтобы визуально оценить результаты прохождения скрипта
+        time.sleep(3)
+        # закрываем браузер после всех манипуляций
+        browser.quit()
+        # с помощью assert проверяем, что ожидаемый текст совпадает с текстом на странице сайта
+        assert "Congratulations! You have successfully registered!" == welcome_text, "Should be - Congratulations! You have successfully registered!"
+
+def test_abs2():
+    try: 
+        browser = webdriver.Chrome()
+        link = "http://suninjuly.github.io/registration2.html"
+        browser.get(link)
+        # Ваш код, который заполняет обязательные поля
+        input1 = browser.find_element_by_css_selector(".first[required]")
+        input1.send_keys("Vladimir")
+        input2 = browser.find_element_by_css_selector(".second[required]")
+        input2.send_keys("Lenin")
+        input3 = browser.find_element_by_css_selector(".third[required]")
+        input3.send_keys("USSR_1917@yandex.ru")
+
+        # Отправляем заполненную форму
+        button = browser.find_element_by_css_selector("button.btn")
+        button.click()
+
+        # Проверяем, что смогли зарегистрироваться
+        # ждем загрузки страницы
+        time.sleep(1)
+
+        # находим элемент, содержащий текст
+        welcome_text_elt = browser.find_element_by_tag_name("h1")
+        # записываем в переменную welcome_text текст из элемента welcome_text_elt
+        welcome_text = welcome_text_elt.text
+    finally:
+        # ожидание чтобы визуально оценить результаты прохождения скрипта
+        time.sleep(3)
+        # закрываем браузер после всех манипуляций
+        browser.quit()
+        # с помощью assert проверяем, что ожидаемый текст совпадает с текстом на странице сайта
+        assert "Congratulations! You have successfully registered!" == welcome_text, "Should be - Congratulations! You have successfully registered!"
+
+if __name__ == "__main__":
+	os.system ("pytest " + os.path.basename(__file__) + " --tb=line")
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson1_item6_step8.py
 from selenium import webdriver
 import time
@@ -720,6 +797,62 @@ def test_substring(full_string, substring):
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item4_step7_test.py
+import os
+import pytest
+
+@pytest.fixture(scope="class")
+def prepare_faces():
+    print("^_^", "\n")
+    yield
+    print(":3", "\n")
+
+
+@pytest.fixture()
+def very_important_fixture():
+    print(":) \t very_important_fixture", "\n")
+
+
+@pytest.fixture(autouse=True)
+def print_smiling_faces():
+    print(":-Р \t print_smiling_faces", "\n")
+
+
+class TestPrintSmilingFaces():
+    def test_first_smiling_faces(self, prepare_faces, very_important_fixture):
+        # какие-то проверки
+        print("test_first_smiling_faces")
+
+    def test_second_smiling_faces(self, prepare_faces):
+        # какие-то проверки
+        print("test_second_smiling_faces")
+
+
+if __name__ == "__main__":
+	os.system ("pytest " + os.path.basename(__file__) + " -s")
+#  cd $HOME/selenium_course;python  ~/selenium_course/lesson3_item4_step7_test.py
+'''
+====================================== test session starts ======================================
+platform linux -- Python 3.7.9, pytest-5.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /home/kde/selenium_course
+collected 2 items                                                                               
+
+lesson3_item4_step7_test.py ^_^ 
+
+:-Р 
+
+:) 
+
+.:-Р 
+
+.:3 
+
+
+
+======================================= 2 passed in 0.02s =======================================
+'''
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson2_item1_step6.py
 from selenium import webdriver
 import time
@@ -938,6 +1071,263 @@ finally:
 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item5_step6_test_xfail.py
+import pytest
+import os
+
+# Пометьте первый тест параметром, который в случае неожиданного прохождения теста,
+# помеченного как xfail, отметит в отчете этот тест как упавший.
+
+
+@pytest.mark.xfail(strict=True)  # strict=True
+def test_succeed():
+    assert True
+
+
+@pytest.mark.xfail
+def test_not_succeed():
+    assert False
+
+
+@pytest.mark.skip
+def test_skipped():
+    assert False
+
+if __name__ == "__main__":
+	os.system ("pytest " + os.path.basename(__file__) + " -s")
+#cd $HOME/selenium_course;python  ~/selenium_course/lesson3_item5_step6_test_xfail.py
+#conda deactivate; source $HOME/enviroments/selenium_env/bin/activate; cd $HOME/selenium_course;python  ~/selenium_course/lesson3_item5_step6_test_xfail.py
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item5_step7.py
+import pytest
+
+@pytest.fixture
+def browser():
+    pass
+
+
+class TestMainPage():
+    # номер 1
+    @pytest.mark.xfail
+    @pytest.mark.smoke
+    def test_guest_can_login(self, browser):
+        print(1)
+        assert True
+
+    # номер 2
+    @pytest.mark.regression
+    def test_guest_can_add_book_from_catalog_to_basket(self, browser):
+        print(2)
+        assert True
+
+
+class TestBasket():
+    # номер 3
+    @pytest.mark.skip(reason="not implemented yet")
+    @pytest.mark.smoke
+    def test_guest_can_go_to_payment_page(self, browser):
+        print(3)
+        assert True
+
+    # номер 4
+    @pytest.mark.smoke
+    def test_guest_can_see_total_price(self, browser):
+        print(4)
+        assert True
+
+
+@pytest.mark.skip
+class TestBookPage():
+    # номер 5
+    @pytest.mark.smoke
+    def test_guest_can_add_book_to_basket(self, browser):
+        print(5)
+        assert True
+
+    # номер 6
+    @pytest.mark.regression
+    def test_guest_can_see_book_price(self, browser):
+        print(6)
+        assert True
+
+
+# номер 7
+@pytest.mark.beta_users
+@pytest.mark.smoke
+def test_guest_can_open_gadget_catalogue(browser):
+    print(7)
+    assert True
+
+
+#pytest -v -m "smoke and not beta_users" lesson3_item5_step7.py
+#C первого раза. просто смотрите где есть smoke потом нет ли там "beta users", потому что не должно бить, потом смотрите будут ли тести skip или нет. если xfail есть то тест все равно будет исполняться.
+# 1 4
+
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ lesson3_item6_step3.py
+homework = '''
+    Инопланетяне оставляют загадочные сообщения на Stepik в фидбеке задач на правильное решение. Мы смогли локализовать несколько url-адресов задач, где появляются кусочки сообщений. Ваша задача — реализовать автотест со следующим сценарием действий: 
+
+        открыть страницу 
+        ввести правильный ответ 
+        нажать кнопку "Отправить" 
+        дождаться фидбека о том, что ответ правильный 
+        проверить, что текст в опциональном фидбеке полностью совпадает с "Correct!"
+
+    Опциональный фидбек — это текст в черном поле, как показано на скриншоте: 
+
+
+    Правильным ответом на задачу в заданных шагах является число:
+
+    import time
+    import math
+
+    answer = math.log(int(time.time()))
+
+    Используйте маркировку pytest для параметризации и передайте в тест список ссылок в качестве параметров: 
+
+    https://stepik.org/lesson/236895/step/1
+    https://stepik.org/lesson/236896/step/1
+    https://stepik.org/lesson/236897/step/1
+    https://stepik.org/lesson/236898/step/1
+    https://stepik.org/lesson/236899/step/1
+    https://stepik.org/lesson/236903/step/1
+    https://stepik.org/lesson/236904/step/1
+    https://stepik.org/lesson/236905/step/1
+
+    Используйте осмысленное сообщение об ошибке в проверке текста, а также настройте нужные ожидания, чтобы тесты работали стабильно. 
+
+    В упавших тестах найдите кусочки послания. Тест должен падать, если текст в опциональном фидбеке не совпадает со строкой "Correct!" Соберите кусочки текста в одно предложение и отправьте в качестве ответа на это задание. 
+
+    Важно! Чтобы пройти это задание, дополнительно убедитесь в том, что у вас установлено правильное локальное время (https://time.is/ru/). Ответ для каждой задачи нужно пересчитывать отдельно, иначе они устаревают. 
+'''
+
+import math
+import time
+
+import pytest
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+correct_answer_text = "Correct!"
+
+# Создаем кортеж со списком url
+url_check = ("https://stepik.org/lesson/236895/step/1",
+             "https://stepik.org/lesson/236896/step/1",
+             "https://stepik.org/lesson/236897/step/1",
+             "https://stepik.org/lesson/236898/step/1",
+             "https://stepik.org/lesson/236899/step/1",
+             "https://stepik.org/lesson/236903/step/1",
+             "https://stepik.org/lesson/236904/step/1",
+             "https://stepik.org/lesson/236905/step/1")
+
+
+@pytest.fixture(scope="function")  # Создаем фикустуру для запуска браузера
+def browser():
+    print("\n Start browser...")
+    browser = webdriver.Chrome()
+    yield browser
+    print("\n Quit browser..")
+    browser.quit()
+
+
+@pytest.mark.parametrize('url', url_check)
+def test_hidden_message(browser, url):
+    link = f'{url}'
+    browser.get(link)
+
+    # Ждем появления текстового поля на странице в течении 10 сек
+    # Находим поле ввода ответа на странице, и вставляем туда ответ math.log(int(time.time())
+    WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "textarea.textarea"))
+    )
+    text_field = browser.find_element_by_css_selector("textarea.textarea")
+    text_field.send_keys(str(math.log(int(time.time()))))  # Хорошо читается :/
+
+    # Находим кнопку "Submit"
+    # Нажимаем на нее
+    submit_btn = browser.find_element_by_css_selector("button.submit-submission")
+    submit_btn.click()
+
+    # Ждем появления элемента "дополнительного фидбека" в течении 5 сек
+    # Находим параметр text у найденого элемента
+    # Сверяем text с искомым нами (correct_answer_text)
+    WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "pre.smart-hints__hint"))
+    )
+    find_answer_text = browser.find_element_by_css_selector("pre.smart-hints__hint")
+    answer_text = find_answer_text.text
+
+    try:
+        assert answer_text == correct_answer_text, 'Text is not: "Correct!"'
+
+    except Exception:
+        raise AssertionError('Error! Text does not match')
+    finally:
+        print("----> " + answer_text + " <----")
+
+# Смотриться лучше, но без assertError  не падает, браузер открыт всю сессию
+# #from selenium import webdriver
+# import pytest
+# import time
+# import math
+#
+# final = ''
+#
+#
+# @pytest.fixture(scope="session")
+# def browser():
+#     br = webdriver.Chrome()
+#     yield br
+#     br.quit()
+#     print(final)  # напечатать ответ про Сов в конце всей сессии
+#
+#
+# @pytest.mark.parametrize('lesson', ['236895', '236896', '236897', '236898', '236899', '236903', '236904', '236905'])
+# def test_find_hidden_text(browser, lesson):
+#     global final
+#     link = f'https://stepik.org/lesson/{lesson}/step/1'
+#     browser.implicitly_wait(10)
+#     browser.get(link)
+#     answer = math.log(int(time.time()))
+#     browser.find_element_by_css_selector('textarea').send_keys(str(answer))
+#     browser.find_element_by_css_selector('.submit-submission ').click()
+#     check_text = browser.find_element_by_css_selector('.smart-hints__hint').text
+#     try:
+#         assert 'Correct!' == check_text
+#     except AssertionError:
+#         final += check_text  # собираем ответ про Сов с каждой ошибкой
+
+#pytest -v  lesson3_item6_step3.py
+
+answer = '''
+
+E           AssertionError: Text is not: "Correct!"
+E           assert 'The owls ' == 'Correct!'
+E             - The owls 
+E             + Correct!
+E           AssertionError: Error! Text does not match
+E           AssertionError: Text is not: "Correct!"
+E           assert 'are not ' == 'Correct!'
+E             - are not 
+E             + Correct!
+E           AssertionError: Error! Text does not match
+E           AssertionError: Text is not: "Correct!"
+E           assert 'what they seem! OvO' == 'Correct!'
+E             - what they seem! OvO
+E             + Correct!
+E           AssertionError: Error! Text does not match
+
+
+The owls are not what they seem! OvO
+'''
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson1_item6_step7.py
 
 from selenium import webdriver
@@ -991,7 +1381,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
+#print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
 
 
 
@@ -1010,7 +1400,8 @@ while True:
     time.sleep(2)
     i += 1
     #print(i)
-    print(f"{bcolors.WARNING}==={i}==={bcolors.ENDC}")
+    #print(f"{bcolors.WARNING}==={i}==={bcolors.ENDC}")
+    print("i: "+ str(i))
     os.system(myCmd)
     f = open("txt.txt")
     read = f.read()
@@ -1018,15 +1409,76 @@ while True:
     f.close()
     if not "time=" in read:
         os.system("sudo service network-manager restart")
-        print(f"{bcolors.FAIL}Try reload{bcolors.ENDC}")
-        errors =+ 1
+        #https://stackoverflow.com/questions/48639609/sudo-pass-automatic-password-in-python
+        #https://askubuntu.com/questions/155791/how-do-i-sudo-a-command-in-a-script-without-being-asked-for-a-password
+        #print(f"{bcolors.FAIL}Try reload{bcolors.ENDC}")
+        print("reload")
+        errors += 1
     else:
-        print(f"{bcolors.OKGREEN}OK. Continue... {errors}{bcolors.ENDC}")
+        #print(f"{bcolors.OKGREEN}OK. Continue... {errors}{bcolors.ENDC}")
+        print("errors: " + str(errors))
     
 
 	#myCmd = os.popen(myCmd).read()
 	#print(myCmd)
 
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+############ pytest_template_test.py
+'''
+https://coderlessons.com/tutorials/python-technologies/uznaite-pytest/pytest-kratkoe-rukovodstvo
+
+import unittest
+
+class TestUtilDate(unittest.TestCase):
+    def setUp(self):
+        #init_something()
+        pass
+        
+    def tearDown(self):
+        #teardown_something()
+        pass
+        
+    def test_upper(self):
+        self.assertEqual('foo'.upper(), 'FOO')
+        
+    def test_isupper(self):
+        self.assertTrue('FOO'.isupper())
+        
+    def test_failed_upper(self):
+        self.assertEqual('foo'.upper(), 'FOo')
+        
+if __name__ == '__main__':
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestUtilDate)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+'''
+
+# То же самое в PyTest:
+
+import os
+import pytest
+
+def setup_module(module):
+    #init_something()
+    pass
+
+def teardown_module(module):
+    #teardown_something()
+    pass
+
+def test_upper():
+    assert 'foo'.upper() == 'FOO'
+    
+def test_isupper():
+    assert 'FOO'.isupper()
+    
+def test_failed_upper():
+    assert 'foo'.upper() == 'FOo'
+
+if __name__ == "__main__":
+	os.system ("pytest " + os.path.basename(__file__) + " --tb=line ")
+    #os.system ("pytest -v " + os.path.basename(__file__) + " --tb=line ")
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 ############ lesson1_item6_step4.py

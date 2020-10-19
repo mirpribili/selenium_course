@@ -924,3 +924,20 @@ link = <span class="hljs-string"><span class="hljs-string">"http://selenium1py.p
 <img alt="" src="/[img]/2.png" width="1019" height="186">
 <img alt="" src="/[img]/3.png" width="1022" height="192">
 <img alt="" src="/[img]/4.png" width="843" height="173">
+
+
+
+<span><h2>Команда для запуска тестов PyTest</h2>
+
+<p>Напишите ниже команду PyTest,&nbsp;которая:&nbsp;</p>
+
+<ul>
+    <li>запустит тесты с меткой <strong>smoke</strong></li>
+    <li>запустит тесты с меткой <strong>regression</strong></li>
+    <li>укажет, что использовать нужно&nbsp;браузер <strong>firefox</strong> с помощью параметра browser_name (имя браузера без кавычек)</li>
+    <li>тесты должны быть из&nbsp;файла <strong>test_login.py</strong>.&nbsp;&nbsp; &nbsp; &nbsp;</li>
+</ul>
+
+<p>Последовательность параметров команды&nbsp;должна соответствовать приведенному выше списку. <strong>Никакие другие флаги не нужны.&nbsp;</strong></p></span>
+
+**pytest -m "smoke or regression" --browser_name=firefox test_login.py**
